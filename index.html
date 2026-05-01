@@ -214,6 +214,63 @@
             background: #111827;
         }
 
+        .modal-area {
+            position: fixed;
+            inset: 0;
+            background: rgba( 15, 23, 42, 0.48 );
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 99998;
+        }
+
+        .modal-area.ativo {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 390px;
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 24px 60px rgba( 0, 0, 0, 0.25 );
+            animation: modalEntrar 0.22s ease;
+        }
+
+        .modal-icone {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: #fee2e2;
+            color: #ef4444;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .modal h3 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .modal p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .modal-botoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
         @keyframes toastEntrar {
 
             from {
@@ -224,6 +281,20 @@
             to {
                 opacity: 1;
                 transform: translateY( 0 );
+            }
+
+        }
+
+        @keyframes modalEntrar {
+
+            from {
+                opacity: 0;
+                transform: scale( 0.96 );
+            }
+
+            to {
+                opacity: 1;
+                transform: scale( 1 );
             }
 
         }
@@ -256,6 +327,8 @@
             <div class="acoes">
 
                 <button onclick="novaNota ( )">Nova nota</button>
+
+                <button class="perigo" onclick="confirmarExcluirTudo ( )">Excluir tudo</button>
 
             </div>
 
@@ -309,7 +382,7 @@
 
                     <button class="secundario" onclick="limparEditor ( )">Limpar</button>
 
-                    <button class="perigo" onclick="excluirNota ( )">Excluir</button>
+                    <button class="perigo" onclick="confirmarExcluirNota ( )">Excluir</button>
 
                     <button onclick="salvarNota ( )">Salvar</button>
 
@@ -323,11 +396,35 @@
 
     <div class="toast-area" id="toastArea"></div>
 
+    <div class="modal-area" id="modalArea">
+
+        <div class="modal">
+
+            <div class="modal-icone">!</div>
+
+            <h3 id="modalTitulo">Confirmar ação</h3>
+
+            <p id="modalTexto">Deseja continuar?</p>
+
+            <div class="modal-botoes">
+
+                <button class="secundario" onclick="fecharModal ( )">Cancelar</button>
+
+                <button class="perigo" id="modalConfirmar">Confirmar</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <script>
 
         let notas = JSON.parse ( localStorage.getItem ( 'notas' ) || '[ ]' );
 
         let notaAtual = null;
+
+        let acaoConfirmada = null;
 
 
 
@@ -408,6 +505,56 @@
             }, 2600 );
 
         }
+
+
+
+        function abrirModal ( titulo, texto, callback ) {
+
+            acaoConfirmada = callback;
+
+            document.getElementById ( 'modalTitulo' ).innerText = titulo;
+
+            document.getElementById ( 'modalTexto' ).innerText = texto;
+
+            document.getElementById ( 'modalArea' ).classList.add ( 'ativo' );
+
+        }
+
+
+
+        function fecharModal ( ) {
+
+            acaoConfirmada = null;
+
+            document.getElementById ( 'modalArea' ).classList.remove ( 'ativo' );
+
+        }
+
+
+
+        document.getElementById ( 'modalConfirmar' ).addEventListener ( 'click', function ( ) {
+
+            if ( typeof acaoConfirmada == 'function' ) {
+
+                acaoConfirmada ( );
+
+            }
+
+            fecharModal ( );
+
+        } );
+
+
+
+        document.getElementById ( 'modalArea' ).addEventListener ( 'click', function ( e ) {
+
+            if ( e.target.id == 'modalArea' ) {
+
+                fecharModal ( );
+
+            }
+
+        } );
 
 
 
@@ -533,7 +680,7 @@
 
 
 
-        function excluirNota ( ) {
+        function confirmarExcluirNota ( ) {
 
             if ( notaAtual == null ) {
 
@@ -543,21 +690,83 @@
 
             }
 
-            if ( confirm ( 'Deseja excluir esta nota?' ) ) {
+            abrirModal (
 
-                notas = notas.filter ( nota => nota.id != notaAtual );
+                'Excluir nota?',
 
-                notaAtual = null;
+                'Essa ação vai apagar a nota selecionada de forma permanente.',
 
-                salvarLocal ( );
+                function ( ) {
 
-                limparEditor ( );
+                    excluirNota ( );
 
-                renderizarNotas ( );
+                }
 
-                toast ( 'Nota excluída com sucesso', 'perigo' );
+            );
+
+        }
+
+
+
+        function excluirNota ( ) {
+
+            notas = notas.filter ( nota => nota.id != notaAtual );
+
+            notaAtual = null;
+
+            salvarLocal ( );
+
+            limparEditor ( );
+
+            renderizarNotas ( );
+
+            toast ( 'Nota excluída com sucesso', 'perigo' );
+
+        }
+
+
+
+        function confirmarExcluirTudo ( ) {
+
+            if ( notas.length == 0 ) {
+
+                toast ( 'Você ainda não tem notas para excluir', 'info' );
+
+                return;
 
             }
+
+            abrirModal (
+
+                'Excluir todas as notas?',
+
+                'Todas as suas anotações serão apagadas definitivamente.',
+
+                function ( ) {
+
+                    excluirTudo ( );
+
+                }
+
+            );
+
+        }
+
+
+
+        function excluirTudo ( ) {
+
+            notas = [ ];
+
+            notaAtual = null;
+
+            salvarLocal ( );
+
+            limparEditor ( );
+
+            renderizarNotas ( );
+
+            toast ( 'Todas as notas foram excluídas', 'perigo' );
 
         }
 
