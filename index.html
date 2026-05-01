@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minhas Anotações</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tinymce-i18n@23.7.20/langs/pt_BR.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6fb;
+            color: #111827;
+        }
+
+        .app {
+            max-width: 1250px;
+            margin: auto;
+            padding: 18px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .topo h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        input,
+        select,
+        button {
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 9px 11px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: white;
+        }
+
+        button {
+            width: auto;
+            cursor: pointer;
+            border: none;
+            background: #111827;
+            color: white;
+            transition: 0.2s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY( -1px );
+        }
+
+        button.secundario {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        button.perigo {
+            background: #ef4444;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 14px;
+        }
+
+        .lista,
+        .editor {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba( 0, 0, 0, 0.06 );
+            padding: 12px;
+        }
+
+        .filtros {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .nota {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background: #ffffff;
+            transition: 0.2s ease;
+        }
+
+        .nota:hover {
+            background: #f9fafb;
+            border-color: #cbd5e1;
+        }
+
+        .nota.ativa {
+            border-color: #111827;
+            background: #f9fafb;
+        }
+
+        .nota-titulo {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .nota-data {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .nota-resumo {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .campo {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .campo label {
+            font-size: 13px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .botoes-editor {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .vazio {
+            padding: 12px;
+            color: #6b7280;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .toast-area {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            display: grid;
+            gap: 10px;
+            z-index: 99999;
+        }
+
+        .toast {
+            min-width: 230px;
+            background: #111827;
+            color: white;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 13px;
+            box-shadow: 0 12px 30px rgba( 0, 0, 0, 0.2 );
+            animation: toastEntrar 0.25s ease;
+        }
+
+        .toast.sucesso {
+            background: #16a34a;
+        }
+
+        .toast.perigo {
+            background: #ef4444;
+        }
+
+        .toast.info {
+            background: #111827;
+        }
+
+        @keyframes toastEntrar {
+
+            from {
+                opacity: 0;
+                transform: translateY( 10px );
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY( 0 );
+            }
+
+        }
+
+        @media ( max-width: 850px ) {
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topo">
+
+            <h1>Minhas Anotações</h1>
+
+            <div class="acoes">
+
+                <button onclick="novaNota ( )">Nova nota</button>
+
+            </div>
+
+        </div>
+
+        <div class="layout">
+
+            <div class="lista">
+
+                <div class="filtros">
+
+                    <input type="text" id="buscar" placeholder="Filtrar notas..." oninput="renderizarNotas ( )">
+
+                    <select id="ordenar" onchange="renderizarNotas ( )">
+
+                        <option value="recente">Mais recentes</option>
+
+                        <option value="antiga">Mais antigas</option>
+
+                        <option value="az">Título A-Z</option>
+
+                        <option value="za">Título Z-A</option>
+
+                    </select>
+
+                </div>
+
+                <div id="listaNotas"></div>
+
+            </div>
+
+            <div class="editor">
+
+                <div class="campo">
+
+                    <label>Título</label>
+
+                    <input type="text" id="tituloNota" placeholder="Digite o título da nota">
+
+                </div>
+
+                <div class="campo">
+
+                    <label>Anotação</label>
+
+                    <textarea id="conteudoNota"></textarea>
+
+                </div>
+
+                <div class="botoes-editor">
+
+                    <button class="secundario" onclick="limparEditor ( )">Limpar</button>
+
+                    <button class="perigo" onclick="excluirNota ( )">Excluir</button>
+
+                    <button onclick="salvarNota ( )">Salvar</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="toast-area" id="toastArea"></div>
+
+    <script>
+
+        let notas = JSON.parse ( localStorage.getItem ( 'notas' ) || '[ ]' );
+
+        let notaAtual = null;
+
+
+
+        tinymce.init ( {
+
+            selector: '#conteudoNota',
+
+            height: 430,
+
+            menubar: true,
+
+            branding: false,
+
+            promotion: false,
+
+            language: 'pt_BR',
+
+            plugins: 'preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
+
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | charmap emoticons | removeformat | fullscreen preview code',
+
+            toolbar_mode: 'sliding',
+
+            quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 blockquote',
+
+            quickbars_insert_toolbar: 'quickimage quicktable',
+
+            contextmenu: 'link image table',
+
+            image_title: true,
+
+            automatic_uploads: true,
+
+            file_picker_types: 'image',
+
+            table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+
+            autosave_ask_before_unload: true,
+
+            autosave_interval: '20s',
+
+            autosave_retention: '30m',
+
+            content_style: `
+
+                body {
+                    font-family: Poppins, Arial, sans-serif;
+                    font-size: 15px;
+                    line-height: 1.7;
+                    color: #111827;
+                }
+
+                img {
+                    max-width: 100%;
+                    height: auto;
+                }
+
+            `
+
+        } );
+
+
+
+        function toast ( msg, tipo = 'info' ) {
+
+            let el = document.createElement ( 'div' );
+
+            el.className = 'toast ' + tipo;
+
+            el.innerText = msg;
+
+            document.getElementById ( 'toastArea' ).appendChild ( el );
+
+            setTimeout ( ( ) => {
+
+                el.remove ( );
+
+            }, 2600 );
+
+        }
+
+
+
+        function salvarLocal ( ) {
+
+            localStorage.setItem ( 'notas', JSON.stringify ( notas ) );
+
+        }
+
+
+
+        function novaNota ( ) {
+
+            notaAtual = null;
+
+            document.getElementById ( 'tituloNota' ).value = '';
+
+            tinymce.get ( 'conteudoNota' ).setContent ( '' );
+
+            renderizarNotas ( );
+
+            toast ( 'Nova nota iniciada', 'info' );
+
+        }
+
+
+
+        function limparEditor ( ) {
+
+            document.getElementById ( 'tituloNota' ).value = '';
+
+            tinymce.get ( 'conteudoNota' ).setContent ( '' );
+
+            toast ( 'Editor limpo', 'info' );
+
+        }
+
+
+
+        function salvarNota ( ) {
+
+            let titulo = document.getElementById ( 'tituloNota' ).value.trim ( );
+
+            let conteudo = tinymce.get ( 'conteudoNota' ).getContent ( );
+
+            let criando = notaAtual == null;
+
+            if ( titulo == '' ) {
+
+                titulo = 'Sem título';
+
+            }
+
+            if ( criando ) {
+
+                let id = Date.now ( );
+
+                notas.push ( {
+
+                    id: id,
+
+                    titulo: titulo,
+
+                    conteudo: conteudo,
+
+                    criadaEm: new Date ( ).toISOString ( ),
+
+                    atualizadaEm: new Date ( ).toISOString ( )
+
+                } );
+
+                notaAtual = id;
+
+            } else {
+
+                notas = notas.map ( nota => {
+
+                    if ( nota.id == notaAtual ) {
+
+                        nota.titulo = titulo;
+
+                        nota.conteudo = conteudo;
+
+                        nota.atualizadaEm = new Date ( ).toISOString ( );
+
+                    }
+
+                    return nota;
+
+                } );
+
+            }
+
+            salvarLocal ( );
+
+            renderizarNotas ( );
+
+            toast ( criando ? 'Nota adicionada com sucesso' : 'Nota salva com sucesso', 'sucesso' );
+
+        }
+
+
+
+        function editarNota ( id ) {
+
+            let nota = notas.find ( item => item.id == id );
+
+            if ( ! nota ) {
+
+                return;
+
+            }
+
+            notaAtual = id;
+
+            document.getElementById ( 'tituloNota' ).value = nota.titulo;
+
+            tinymce.get ( 'conteudoNota' ).setContent ( nota.conteudo );
+
+            renderizarNotas ( );
+
+        }
+
+
+
+        function excluirNota ( ) {
+
+            if ( notaAtual == null ) {
+
+                toast ( 'Selecione uma nota para excluir', 'info' );
+
+                return;
+
+            }
+
+            if ( confirm ( 'Deseja excluir esta nota?' ) ) {
+
+                notas = notas.filter ( nota => nota.id != notaAtual );
+
+                notaAtual = null;
+
+                salvarLocal ( );
+
+                limparEditor ( );
+
+                renderizarNotas ( );
+
+                toast ( 'Nota excluída com sucesso', 'perigo' );
+
+            }
+
+        }
+
+
+
+        function textoLimpo ( html ) {
+
+            let div = document.createElement ( 'div' );
+
+            div.innerHTML = html;
+
+            return div.textContent || div.innerText || '';
+
+        }
+
+
+
+        function renderizarNotas ( ) {
+
+            let busca = document.getElementById ( 'buscar' ).value.toLowerCase ( );
+
+            let ordem = document.getElementById ( 'ordenar' ).value;
+
+            let lista = [ ...notas ];
+
+            lista = lista.filter ( nota => {
+
+                let titulo = ( nota.titulo || '' ).toLowerCase ( );
+
+                let conteudo = textoLimpo ( nota.conteudo || '' ).toLowerCase ( );
+
+                return titulo.includes ( busca ) || conteudo.includes ( busca );
+
+            } );
+
+            lista.sort ( ( a, b ) => {
+
+                let dataA = new Date ( a.atualizadaEm || a.data || a.criadaEm || 0 );
+
+                let dataB = new Date ( b.atualizadaEm || b.data || b.criadaEm || 0 );
+
+                if ( ordem == 'recente' ) {
+
+                    return dataB - dataA;
+
+                }
+
+                if ( ordem == 'antiga' ) {
+
+                    return dataA - dataB;
+
+                }
+
+                if ( ordem == 'az' ) {
+
+                    return ( a.titulo || '' ).localeCompare ( b.titulo || '' );
+
+                }
+
+                if ( ordem == 'za' ) {
+
+                    return ( b.titulo || '' ).localeCompare ( a.titulo || '' );
+
+                }
+
+                return 0;
+
+            } );
+
+            let html = '';
+
+            if ( lista.length == 0 ) {
+
+                html = '<div class="vazio">Nenhuma nota encontrada</div>';
+
+            }
+
+            lista.forEach ( nota => {
+
+                let ativo = nota.id == notaAtual ? 'ativa' : '';
+
+                let dataBase = nota.atualizadaEm || nota.data || nota.criadaEm;
+
+                let data = dataBase ? new Date ( dataBase ).toLocaleString ( 'pt-BR' ) : '';
+
+                let resumo = textoLimpo ( nota.conteudo || '' ).slice ( 0, 85 );
+
+                html += `
+
+                    <div class="nota ${ ativo }" onclick="editarNota ( ${ nota.id } )">
+
+                        <div class="nota-titulo">${ nota.titulo }</div>
+
+                        <div class="nota-data">${ data }</div>
+
+                        <div class="nota-resumo">${ resumo }</div>
+
+                    </div>
+
+                `;
+
+            } );
+
+            document.getElementById ( 'listaNotas' ).innerHTML = html;
+
+        }
+
+
+
+        renderizarNotas ( );
+
+    </script>
+
+</body>
+
+</html>
