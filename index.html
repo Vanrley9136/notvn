@@ -46,21 +46,113 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             margin-bottom: 14px;
+            padding: 14px;
+            border-radius: 22px;
+            background: linear-gradient( 135deg, #111827, #1f2937 );
+            box-shadow: 0 18px 45px rgba( 17, 24, 39, 0.20 );
             flex-shrink: 0;
         }
 
-        .topo h1 {
+        .topo-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .app-icone {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: rgba( 255, 255, 255, 0.12 );
+            color: white;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .topo-textos h1 {
             margin: 0;
-            font-size: 26px;
+            color: white;
+            font-size: 24px;
             font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .topo-textos p {
+            margin: 4px 0 0;
+            color: rgba( 255, 255, 255, 0.72 );
+            font-size: 13px;
+        }
+
+        .topo-direita {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         .acoes {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+        }
+
+        .usuario-card {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 7px 9px;
+            border-radius: 16px;
+            background: rgba( 255, 255, 255, 0.10 );
+            border: 1px solid rgba( 255, 255, 255, 0.12 );
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient( 135deg, #60a5fa, #a78bfa );
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .usuario-info {
+            display: grid;
+            line-height: 1.2;
+        }
+
+        .usuario-info strong {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .usuario-info span {
+            color: rgba( 255, 255, 255, 0.68 );
+            font-size: 11px;
+        }
+
+        .status-online {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-online::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba( 34, 197, 94, 0.16 );
         }
 
         input,
@@ -91,6 +183,16 @@
         button:hover {
             opacity: 0.9;
             transform: translateY( -1px );
+        }
+
+        .topo button {
+            background: rgba( 255, 255, 255, 0.14 );
+            color: white;
+            border: 1px solid rgba( 255, 255, 255, 0.14 );
+        }
+
+        .topo button.perigo {
+            background: rgba( 239, 68, 68, 0.95 );
         }
 
         button.secundario {
@@ -124,6 +226,12 @@
             flex-direction: column;
         }
 
+        .editor {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
         .filtros {
             display: grid;
             gap: 8px;
@@ -154,10 +262,6 @@
             border-radius: 20px;
         }
 
-        .lista-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
         .nota {
             border: 1px solid #edf0f5;
             border-radius: 16px;
@@ -166,12 +270,6 @@
             cursor: pointer;
             background: linear-gradient( 180deg, #ffffff, #fbfcff );
             transition: 0.2s ease;
-        }
-
-        .nota:hover {
-            border-color: #cbd5e1;
-            box-shadow: 0 8px 22px rgba( 0, 0, 0, 0.05 );
-            transform: translateY( -1px );
         }
 
         .nota.ativa {
@@ -221,11 +319,6 @@
             word-break: break-word;
         }
 
-        .editor {
-            display: flex;
-            flex-direction: column;
-        }
-
         .campo {
             display: grid;
             gap: 6px;
@@ -239,13 +332,46 @@
             font-weight: 500;
         }
 
+        .campo-editor {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo-editor .tox-tinymce {
+            flex: 1 !important;
+            min-height: 280px !important;
+        }
+
         .botoes-editor {
             display: flex;
-            justify-content: flex-end;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
             margin-top: 10px;
             flex-wrap: wrap;
             flex-shrink: 0;
+            padding-top: 10px;
+            border-top: 1px solid #eef2f7;
+            background: white;
+        }
+
+        .botoes-grupo {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .botoes-editor button {
+            min-width: 105px;
+            height: 40px;
+            font-weight: 500;
+        }
+
+        .botao-salvar {
+            background: #111827;
+            min-width: 140px;
         }
 
         .vazio {
@@ -399,6 +525,43 @@
                 flex-direction: column;
             }
 
+            .topo-direita {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .acoes {
+                width: 100%;
+            }
+
+            .acoes button {
+                flex: 1;
+            }
+
+            .campo-editor .tox-tinymce {
+                height: 420px !important;
+                min-height: 420px !important;
+            }
+
+        }
+
+        @media ( max-width: 600px ) {
+
+            .botoes-editor {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .botoes-grupo {
+                width: 100%;
+            }
+
+            .botoes-grupo button,
+            .botao-salvar {
+                flex: 1;
+                width: 100%;
+            }
+
         }
 
     </style>
@@ -411,13 +574,43 @@
 
         <div class="topo">
 
-            <h1>Minhas Anotações</h1>
+            <div class="topo-info">
 
-            <div class="acoes">
+                <div class="app-icone">✦</div>
 
-                <button onclick="novaNota ( )">Nova nota</button>
+                <div class="topo-textos">
 
-                <button class="perigo" onclick="confirmarExcluirTudo ( )">Excluir tudo</button>
+                    <h1>Minhas Anotações</h1>
+
+                    <p>Organize ideias, tarefas e registros em um só lugar</p>
+
+                </div>
+
+            </div>
+
+            <div class="topo-direita">
+
+                <div class="usuario-card">
+
+                    <div class="avatar">VA</div>
+
+                    <div class="usuario-info">
+
+                        <strong>Vanrley</strong>
+
+                        <span class="status-online">Online</span>
+
+                    </div>
+
+                </div>
+
+                <div class="acoes">
+
+                    <button onclick="novaNota ( )">Nova nota</button>
+
+                    <button class="perigo" onclick="confirmarExcluirTudo ( )">Excluir tudo</button>
+
+                </div>
 
             </div>
 
@@ -461,7 +654,7 @@
 
                 </div>
 
-                <div class="campo">
+                <div class="campo campo-editor">
 
                     <label>Anotação</label>
 
@@ -471,11 +664,15 @@
 
                 <div class="botoes-editor">
 
-                    <button class="secundario" onclick="limparEditor ( )">Limpar</button>
+                    <div class="botoes-grupo">
 
-                    <button class="perigo" onclick="confirmarExcluirNota ( )">Excluir</button>
+                        <button class="secundario" onclick="limparEditor ( )">Limpar</button>
 
-                    <button onclick="salvarNota ( )">Salvar</button>
+                        <button class="perigo" onclick="confirmarExcluirNota ( )">Excluir</button>
+
+                    </div>
+
+                    <button class="botao-salvar" onclick="salvarNota ( )">Salvar nota</button>
 
                 </div>
 
@@ -523,7 +720,9 @@
 
             selector: '#conteudoNota',
 
-            height: 430,
+            height: '100%',
+
+            resize: false,
 
             menubar: true,
 
