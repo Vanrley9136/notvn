@@ -1,974 +1,1272 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anotações</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<style>
-
-  :root{
-    --bg:#F4F2EC;
-    --surface:#FFFFFF;
-    --surface-2:#FBFAF6;
-    --ink:#211F1B;
-    --ink-soft:#716E66;
-    --ink-faint:#A9A59A;
-    --border:#E5E1D6;
-    --border-strong:#D8D3C4;
-    --accent:#3C5A4C;
-    --accent-soft:#E7EEE9;
-    --accent-line:#3C5A4C;
-    --danger:#A6452C;
-    --danger-soft:#F5E7E2;
-    --radius:10px;
-    --radius-sm:6px;
-    --shadow-card: 0 1px 2px rgba(33,31,27,0.04);
-    --shadow-pop: 0 16px 40px rgba(33,31,27,0.16);
-  }
-
-  *{ box-sizing:border-box; }
-
-  body{
-    margin:0;
-    font-family:'Inter', sans-serif;
-    background:var(--bg);
-    color:var(--ink);
-    overflow:hidden;
-    -webkit-font-smoothing:antialiased;
-  }
-
-  .app{
-    max-width:1280px;
-    height:100vh;
-    margin:auto;
-    padding:22px 24px;
-    display:flex;
-    flex-direction:column;
-  }
-
-  /* ---------- Top bar ---------- */
-
-  .topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:16px;
-    margin-bottom:18px;
-    padding-bottom:18px;
-    border-bottom:1px solid var(--border-strong);
-    flex-shrink:0;
-  }
-
-  .topo-info{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    min-width:0;
-  }
-
-  .app-icone{
-    width:38px;
-    height:38px;
-    display:grid;
-    place-items:center;
-    border-radius:8px;
-    background:var(--ink);
-    color:#F4F2EC;
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:16px;
-    flex-shrink:0;
-  }
-
-  .topo-textos h1{
-    margin:0;
-    font-family:'Fraunces', serif;
-    font-weight:600;
-    font-size:22px;
-    letter-spacing:-0.01em;
-    line-height:1.15;
-    color:var(--ink);
-  }
-
-  .topo-textos p{
-    margin:3px 0 0;
-    color:var(--ink-soft);
-    font-size:12.5px;
-  }
-
-  .topo-direita{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:flex-end;
-  }
-
-  .acoes{
-    display:flex;
-    gap:8px;
-  }
-
-  .usuario-card{
-    display:flex;
-    align-items:center;
-    gap:9px;
-    padding:5px 10px 5px 5px;
-    border-radius:999px;
-    background:var(--surface-2);
-    border:1px solid var(--border);
-  }
-
-  .avatar{
-    width:28px;
-    height:28px;
-    display:grid;
-    place-items:center;
-    border-radius:50%;
-    background:var(--accent);
-    color:#fff;
-    font-size:11px;
-    font-weight:700;
-    font-family:'IBM Plex Mono', monospace;
-  }
-
-  .usuario-info{ line-height:1.15; }
-
-  .usuario-info strong{
-    display:block;
-    font-size:12.5px;
-    font-weight:600;
-    color:var(--ink);
-  }
-
-  .usuario-info span{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    font-size:10.5px;
-    color:var(--ink-soft);
-  }
-
-  .usuario-info span::before{
-    content:'';
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:var(--accent);
-  }
-
-  /* ---------- Buttons ---------- */
-
-  input, select, button{
-    font-family:'Inter', sans-serif;
-    border:1px solid var(--border-strong);
-    border-radius:var(--radius-sm);
-    padding:9px 12px;
-    font-size:13.5px;
-    outline:none;
-    background:var(--surface);
-    color:var(--ink);
-  }
-
-  input, select{ width:100%; }
-
-  input:focus, select:focus, button:focus-visible{
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px var(--accent-soft);
-  }
-
-  button{
-    cursor:pointer;
-    font-weight:600;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-  }
-
-  button:active{ transform:translateY(1px); }
-
-  .topo button{
-    background:var(--ink);
-    color:#F4F2EC;
-    border-color:var(--ink);
-  }
-
-  .topo button:hover{ background:#3A382F; }
-
-  .topo button.perigo{
-    background:transparent;
-    color:var(--danger);
-    border-color:var(--border-strong);
-  }
-
-  .topo button.perigo:hover{
-    background:var(--danger-soft);
-    border-color:var(--danger);
-  }
-
-  button.secundario{
-    background:var(--surface);
-    color:var(--ink);
-    border-color:var(--border-strong);
-  }
-
-  button.secundario:hover{ background:var(--surface-2); }
-
-  button.perigo{
-    background:transparent;
-    color:var(--danger);
-    border-color:var(--border-strong);
-  }
-
-  button.perigo:hover{
-    background:var(--danger-soft);
-    border-color:var(--danger);
-  }
-
-  /* ---------- Layout ---------- */
-
-  .layout{
-    display:grid;
-    grid-template-columns:310px 1fr;
-    gap:20px;
-    min-height:0;
-    flex:1;
-  }
-
-  .lista, .editor{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow-card);
-    padding:14px;
-    min-height:0;
-  }
-
-  .lista{ display:flex; flex-direction:column; }
-
-  .editor{ display:flex; flex-direction:column; overflow:hidden; }
-
-  .filtros{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:8px;
-    margin-bottom:10px;
-    flex-shrink:0;
-  }
-
-  .filtros select{ width:auto; }
-
-  .contador-notas{
-    font-size:11px;
-    font-family:'IBM Plex Mono', monospace;
-    letter-spacing:0.02em;
-    text-transform:uppercase;
-    color:var(--ink-faint);
-    margin:0 2px 10px;
-    flex-shrink:0;
-  }
-
-  .lista-scroll{
-    overflow-y:auto;
-    padding-right:4px;
-    margin-right:-4px;
-    flex:1;
-    min-height:0;
-  }
-
-  .lista-scroll::-webkit-scrollbar{ width:6px; }
-  .lista-scroll::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:20px; }
-
-  .nota{
-    position:relative;
-    border:1px solid var(--border);
-    border-radius:var(--radius-sm);
-    padding:11px 12px 11px 15px;
-    margin-bottom:7px;
-    cursor:pointer;
-    background:var(--surface);
-    transition:border-color 0.15s ease, background 0.15s ease;
-  }
-
-  .nota::before{
-    content:'';
-    position:absolute;
-    left:0; top:8px; bottom:8px;
-    width:3px;
-    border-radius:3px;
-    background:transparent;
-    transition:background 0.15s ease;
-  }
-
-  .nota:hover{ border-color:var(--border-strong); background:var(--surface-2); }
-
-  .nota.ativa{
-    border-color:var(--border-strong);
-    background:var(--accent-soft);
-  }
-
-  .nota.ativa::before{ background:var(--accent-line); }
-
-  .nota-topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:8px;
-  }
-
-  .nota-titulo{
-    font-weight:600;
-    font-size:13.5px;
-    line-height:1.4;
-    word-break:break-word;
-    color:var(--ink);
-  }
-
-  .nota-badge{
-    flex-shrink:0;
-    font-size:9.5px;
-    font-family:'IBM Plex Mono', monospace;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    padding:3px 6px;
-    border-radius:4px;
-    color:var(--ink-soft);
-    background:var(--surface-2);
-    border:1px solid var(--border);
-  }
-
-  .nota-data{
-    font-size:10.5px;
-    font-family:'IBM Plex Mono', monospace;
-    color:var(--ink-faint);
-    margin-top:4px;
-  }
-
-  .nota-resumo{
-    margin-top:6px;
-    font-size:12px;
-    color:var(--ink-soft);
-    line-height:1.5;
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-    word-break:break-word;
-  }
-
-  /* ---------- Editor ---------- */
-
-  .campo{
-    display:grid;
-    gap:6px;
-    margin-bottom:12px;
-    flex-shrink:0;
-  }
-
-  .campo label{
-    font-size:11px;
-    font-family:'IBM Plex Mono', monospace;
-    text-transform:uppercase;
-    letter-spacing:0.04em;
-    color:var(--ink-faint);
-  }
-
-  #tituloNota{
-    font-family:'Fraunces', serif;
-    font-size:17px;
-    font-weight:600;
-    padding:9px 4px;
-    border:none;
-    border-bottom:1px solid var(--border-strong);
-    border-radius:0;
-  }
-
-  #tituloNota:focus{ box-shadow:none; border-bottom-color:var(--accent); }
-
-  .campo-editor{
-    flex:1;
-    min-height:0;
-    display:flex;
-    flex-direction:column;
-  }
-
-  .campo-editor .tox-tinymce{
-    flex:1 !important;
-    min-height:280px !important;
-    border-color:var(--border) !important;
-    border-radius:var(--radius-sm) !important;
-  }
-
-  .botoes-editor{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-top:12px;
-    flex-wrap:wrap;
-    flex-shrink:0;
-    padding-top:12px;
-    border-top:1px solid var(--border);
-  }
-
-  .botoes-grupo{ display:flex; gap:8px; flex-wrap:wrap; }
-
-  .botoes-editor button{ min-width:100px; height:38px; }
-
-  .botao-salvar{
-    background:var(--accent);
-    border-color:var(--accent);
-    color:#fff;
-    min-width:140px;
-  }
-
-  .botao-salvar:hover{ background:#33493D; }
-
-  .vazio{
-    padding:26px 10px;
-    color:var(--ink-faint);
-    text-align:center;
-    font-size:12.5px;
-    border:1px dashed var(--border-strong);
-    border-radius:var(--radius-sm);
-    background:var(--surface-2);
-  }
-
-  /* ---------- Toast ---------- */
-
-  .toast-area{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    display:grid;
-    gap:8px;
-    z-index:99999;
-  }
-
-  .toast{
-    min-width:220px;
-    background:var(--ink);
-    color:#F4F2EC;
-    border-radius:var(--radius-sm);
-    padding:11px 14px;
-    font-size:12.5px;
-    font-weight:500;
-    box-shadow:var(--shadow-pop);
-    animation:toastEntrar 0.2s ease;
-    border-left:3px solid var(--accent);
-  }
-
-  .toast.sucesso{ border-left-color:#6FA37E; }
-  .toast.perigo{ border-left-color:#D97A63; }
-  .toast.info{ border-left-color:var(--ink-faint); }
-
-  /* ---------- Modal ---------- */
-
-  .modal-area{
-    position:fixed;
-    inset:0;
-    background:rgba(33,31,27,0.4);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:18px;
-    z-index:99998;
-  }
-
-  .modal-area.ativo{ display:flex; }
-
-  .modal{
-    width:100%;
-    max-width:380px;
-    background:var(--surface);
-    border-radius:var(--radius);
-    padding:20px;
-    box-shadow:var(--shadow-pop);
-    animation:modalEntrar 0.18s ease;
-  }
-
-  .modal-icone{
-    width:36px;
-    height:36px;
-    display:grid;
-    place-items:center;
-    border-radius:8px;
-    background:var(--danger-soft);
-    color:var(--danger);
-    font-size:18px;
-    font-weight:700;
-    margin-bottom:12px;
-  }
-
-  .modal h3{
-    margin:0 0 6px;
-    font-family:'Fraunces', serif;
-    font-size:17px;
-    font-weight:600;
-  }
-
-  .modal p{
-    margin:0;
-    color:var(--ink-soft);
-    font-size:12.5px;
-    line-height:1.6;
-  }
-
-  .modal-botoes{
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:18px;
-  }
-
-  @keyframes toastEntrar{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
-  @keyframes modalEntrar{ from{opacity:0; transform:scale(0.97);} to{opacity:1; transform:scale(1);} }
-
-  @media (max-width:850px){
-    body{ overflow:auto; }
-    .app{ height:auto; min-height:100vh; }
-    .layout{ grid-template-columns:1fr; }
-    .lista-scroll{ max-height:300px; }
-    .topo{ align-items:flex-start; flex-direction:column; }
-    .topo-direita{ width:100%; justify-content:space-between; }
-    .acoes{ width:100%; }
-    .acoes button{ flex:1; }
-    .campo-editor .tox-tinymce{ height:420px !important; min-height:420px !important; }
-  }
-
-  @media (max-width:600px){
-    .botoes-editor{ flex-direction:column; align-items:stretch; }
-    .botoes-grupo{ width:100%; }
-    .botoes-grupo button, .botao-salvar{ flex:1; width:100%; }
-    .filtros{ grid-template-columns:1fr; }
-    .filtros select{ width:100%; }
-  }
-
-</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Anotações</title>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tinymce-i18n@23.7.20/langs/pt_BR.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #F4F2EC;
+            color: #211F1B;
+            overflow: hidden;
+        }
+
+        .app {
+            max-width: 1280px;
+            height: 100vh;
+            margin: auto;
+            padding: 22px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #D8D3C4;
+            flex-shrink: 0;
+        }
+
+        .topo-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .app-icone {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: #211F1B;
+            color: #F4F2EC;
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .topo-textos h1 {
+            margin: 0;
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 22px;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            color: #211F1B;
+        }
+
+        .topo-textos p {
+            margin: 3px 0 0;
+            color: #716E66;
+            font-size: 12.5px;
+        }
+
+        .topo-direita {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .usuario-card {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 5px 10px 5px 5px;
+            border-radius: 999px;
+            background: #FBFAF6;
+            border: 1px solid #E5E1D6;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #3C5A4C;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .usuario-info {
+            display: grid;
+            line-height: 1.2;
+        }
+
+        .usuario-info strong {
+            color: #211F1B;
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .usuario-info span {
+            color: #716E66;
+            font-size: 10.5px;
+        }
+
+        .status-online {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-online::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3C5A4C;
+        }
+
+        input,
+        select,
+        button {
+            font-family: 'Inter', sans-serif;
+            border: 1px solid #D8D3C4;
+            border-radius: 8px;
+            padding: 9px 11px;
+            font-size: 13.5px;
+            outline: none;
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: white;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: #211F1B;
+            color: white;
+            font-weight: 600;
+            transition: 0.15s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .topo button {
+            background: #211F1B;
+            color: #F4F2EC;
+            border: 1px solid #211F1B;
+        }
+
+        .topo button.perigo {
+            background: transparent;
+            color: #A6452C;
+            border: 1px solid #D8D3C4;
+        }
+
+        .topo button.perigo:hover {
+            background: #F5E7E2;
+            border-color: #A6452C;
+            opacity: 1;
+        }
+
+        button.secundario {
+            background: white;
+            color: #211F1B;
+            border: 1px solid #D8D3C4;
+        }
+
+        button.perigo {
+            background: transparent;
+            color: #A6452C;
+            border: 1px solid #D8D3C4;
+        }
+
+        button.perigo:hover {
+            background: #F5E7E2;
+            border-color: #A6452C;
+            opacity: 1;
+        }
+
+        .botao-salvar {
+            background: #3C5A4C;
+            border: 1px solid #3C5A4C;
+        }
+
+        .botao-salvar:hover {
+            background: #33493D;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+            min-height: 0;
+            flex: 1;
+        }
+
+        .lista,
+        .editor {
+            background: white;
+            border: 1px solid #E5E1D6;
+            border-radius: 12px;
+            box-shadow: 0 1px 2px rgba(33, 31, 27, 0.04);
+            padding: 14px;
+            min-height: 0;
+        }
+
+        .lista {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .filtros select {
+            width: auto;
+        }
+
+        .contador-notas {
+            font-size: 11px;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #A9A59A;
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        .lista-scroll {
+            overflow-y: auto;
+            padding-right: 4px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .lista-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .lista-scroll::-webkit-scrollbar-thumb {
+            background: #D8D3C4;
+            border-radius: 20px;
+        }
+
+        .nota {
+            position: relative;
+            border: 1px solid #E5E1D6;
+            border-radius: 8px;
+            padding: 11px 12px 11px 15px;
+            margin-bottom: 7px;
+            cursor: pointer;
+            background: white;
+            transition: 0.15s ease;
+        }
+
+        .nota::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            border-radius: 3px;
+            background: transparent;
+            transition: 0.15s ease;
+        }
+
+        .nota:hover {
+            border-color: #D8D3C4;
+            background: #FBFAF6;
+        }
+
+        .nota.ativa {
+            border-color: #D8D3C4;
+            background: #E7EEE9;
+        }
+
+        .nota.ativa::before {
+            background: #3C5A4C;
+        }
+
+        .nota-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .nota-titulo {
+            font-weight: 600;
+            font-size: 13.5px;
+            margin-bottom: 3px;
+            line-height: 1.4;
+            word-break: break-word;
+            color: #211F1B;
+        }
+
+        .nota-badge {
+            flex-shrink: 0;
+            font-size: 9.5px;
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 3px 6px;
+            border-radius: 4px;
+            color: #716E66;
+            background: #FBFAF6;
+            border: 1px solid #E5E1D6;
+            white-space: nowrap;
+        }
+
+        .nota-data {
+            font-size: 10.5px;
+            font-family: 'IBM Plex Mono', monospace;
+            color: #A9A59A;
+        }
+
+        .nota-resumo {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #716E66;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
+        }
+
+        .campo {
+            display: grid;
+            gap: 6px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .campo label {
+            font-size: 11px;
+            font-family: 'IBM Plex Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #A9A59A;
+        }
+
+        #tituloNota {
+            font-family: 'Fraunces', serif;
+            font-size: 17px;
+            font-weight: 600;
+            padding: 9px 4px;
+            border: none;
+            border-bottom: 1px solid #D8D3C4;
+            border-radius: 0;
+        }
+
+        #tituloNota:focus {
+            border-bottom-color: #3C5A4C;
+        }
+
+        .campo-editor {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo-editor .tox-tinymce {
+            flex: 1 !important;
+            min-height: 280px !important;
+            border-color: #E5E1D6 !important;
+            border-radius: 8px !important;
+        }
+
+        .botoes-editor {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            padding-top: 12px;
+            border-top: 1px solid #E5E1D6;
+            background: white;
+        }
+
+        .botoes-grupo {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .botoes-editor button {
+            min-width: 100px;
+            height: 38px;
+            font-weight: 600;
+        }
+
+        .botao-salvar {
+            min-width: 140px;
+        }
+
+        .vazio {
+            padding: 26px 10px;
+            color: #A9A59A;
+            text-align: center;
+            font-size: 12.5px;
+            border: 1px dashed #D8D3C4;
+            border-radius: 8px;
+            background: #FBFAF6;
+        }
+
+        .toast-area {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: grid;
+            gap: 8px;
+            z-index: 99999;
+        }
+
+        .toast {
+            min-width: 220px;
+            background: #211F1B;
+            color: #F4F2EC;
+            border-radius: 8px;
+            padding: 11px 14px;
+            font-size: 12.5px;
+            font-weight: 500;
+            box-shadow: 0 16px 40px rgba(33, 31, 27, 0.16);
+            animation: toastEntrar 0.2s ease;
+            border-left: 3px solid #3C5A4C;
+        }
+
+        .toast.sucesso {
+            border-left-color: #6FA37E;
+        }
+
+        .toast.perigo {
+            border-left-color: #D97A63;
+        }
+
+        .toast.info {
+            border-left-color: #A9A59A;
+        }
+
+        .modal-area {
+            position: fixed;
+            inset: 0;
+            background: rgba(33, 31, 27, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            z-index: 99998;
+        }
+
+        .modal-area.ativo {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+            animation: modalEntrar 0.18s ease;
+        }
+
+        .modal-icone {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: #F5E7E2;
+            color: #A6452C;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .modal h3 {
+            margin: 0 0 6px;
+            font-family: 'Fraunces', serif;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .modal p {
+            margin: 0;
+            color: #716E66;
+            font-size: 12.5px;
+            line-height: 1.6;
+        }
+
+        .modal-botoes {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        @keyframes toastEntrar {
+
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @keyframes modalEntrar {
+
+            from {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+        @media (max-width: 850px) {
+
+            body {
+                overflow: auto;
+            }
+
+            .app {
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .lista-scroll {
+                max-height: 320px;
+            }
+
+            .topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topo-direita {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .acoes {
+                width: 100%;
+            }
+
+            .acoes button {
+                flex: 1;
+            }
+
+            .campo-editor .tox-tinymce {
+                height: 420px !important;
+                min-height: 420px !important;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .botoes-editor {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .botoes-grupo {
+                width: 100%;
+            }
+
+            .botoes-grupo button,
+            .botao-salvar {
+                flex: 1;
+                width: 100%;
+            }
+
+            .filtros {
+                grid-template-columns: 1fr;
+            }
+
+            .filtros select {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-  <div class="app">
+    <div class="app">
 
-    <div class="topo">
-      <div class="topo-info">
-        <div class="app-icone">A</div>
-        <div class="topo-textos">
-          <h1>Anotações</h1>
-          <p>Ideias, tarefas e registros em um só lugar</p>
-        </div>
-      </div>
-      <div class="topo-direita">
-        <div class="usuario-card">
-          <div class="avatar">VA</div>
-          <div class="usuario-info">
-            <strong>Vanrley</strong>
-            <span>Online</span>
-          </div>
-        </div>
-        <div class="acoes">
-          <button onclick="novaNota()">+ Nova nota</button>
-          <button class="secundario" onclick="exportarNotas()">Exportar</button>
-          <button class="secundario" onclick="document.getElementById('arquivoImportar').click()">Importar</button>
-          <input type="file" id="arquivoImportar" accept="application/json" style="display:none" onchange="importarNotas(event)">
-          <button class="perigo" onclick="confirmarExcluirTudo()">Excluir tudo</button>
-        </div>
-      </div>
-    </div>
+        <div class="topo">
 
-    <div class="layout">
+            <div class="topo-info">
 
-      <div class="lista">
-        <div class="filtros">
-          <input type="text" id="buscar" placeholder="Filtrar notas..." oninput="renderizarNotas()">
-          <select id="ordenar" onchange="renderizarNotas()">
-            <option value="recente">Recentes</option>
-            <option value="antiga">Antigas</option>
-            <option value="az">A–Z</option>
-            <option value="za">Z–A</option>
-          </select>
-        </div>
-        <div class="contador-notas" id="contadorNotas">0 notas</div>
-        <div class="lista-scroll" id="listaNotas"></div>
-      </div>
+                <div class="app-icone">A</div>
 
-      <div class="editor">
-        <div class="campo">
-          <label>Título</label>
-          <input type="text" id="tituloNota" placeholder="Digite o título da nota">
-        </div>
-        <div class="campo campo-editor">
-          <label>Anotação</label>
-          <div id="editorFallbackAviso" style="display:none; font-size:12px; color:var(--danger); background:var(--danger-soft); border:1px solid var(--danger); border-radius:var(--radius-sm); padding:8px 10px; margin-bottom:8px;">
-            O editor avançado não carregou (sem conexão com o CDN). Usando modo texto simples — suas notas continuam sendo salvas normalmente.
-          </div>
-          <textarea id="conteudoNota" style="flex:1; width:100%; min-height:280px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; resize:vertical; display:none;"></textarea>
-        </div>
-        <div class="botoes-editor">
-          <div class="botoes-grupo">
-            <button class="secundario" onclick="limparEditor()">Limpar</button>
-            <button class="perigo" onclick="confirmarExcluirNota()">Excluir</button>
-          </div>
-          <button class="botao-salvar" onclick="salvarNota()">Salvar nota</button>
-        </div>
-      </div>
+                <div class="topo-textos">
 
-    </div>
-  </div>
+                    <h1>Minhas Anotações</h1>
 
-  <div class="toast-area" id="toastArea"></div>
+                    <p>Organize ideias, tarefas e registros em um só lugar</p>
 
-  <div class="modal-area" id="modalArea">
-    <div class="modal">
-      <div class="modal-icone">!</div>
-      <h3 id="modalTitulo">Excluir nota?</h3>
-      <p id="modalTexto">Essa ação vai apagar a nota selecionada de forma permanente.</p>
-      <div class="modal-botoes">
-        <button class="secundario" onclick="fecharModal()">Cancelar</button>
-        <button class="perigo" id="modalConfirmar">Confirmar</button>
-      </div>
-    </div>
-  </div>
+                </div>
 
-  <script>
-
-    let notas = JSON.parse(localStorage.getItem('notas') || '[]');
-    let notaAtual = null;
-    let acaoConfirmada = null;
-    let modoFallback = false;
-
-    // ---------- Carregamento resiliente do TinyMCE (com CDNs alternativos) ----------
-
-    function carregarScript(url) {
-      return new Promise((resolve, reject) => {
-        let s = document.createElement('script');
-        s.src = url;
-        s.onload = resolve;
-        s.onerror = reject;
-        document.head.appendChild(s);
-      });
-    }
-
-    async function iniciarEditor() {
-      const cdnsTinymce = [
-        'https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.3/tinymce.min.js',
-        'https://unpkg.com/tinymce@6/tinymce.min.js'
-      ];
-
-      if (typeof tinymce === 'undefined') {
-        for (const url of cdnsTinymce) {
-          try {
-            await carregarScript(url);
-            if (typeof tinymce !== 'undefined') break;
-          } catch (e) { /* tenta o próximo CDN */ }
-        }
-      }
-
-      if (typeof tinymce === 'undefined') {
-        ativarModoFallback();
-        return;
-      }
-
-      let idiomaCarregado = false;
-      try {
-        await carregarScript('https://cdn.jsdelivr.net/npm/tinymce-i18n@23.7.20/langs/pt_BR.js');
-        idiomaCarregado = true;
-      } catch (e) { /* segue sem tradução se falhar */ }
-
-      tinymce.init({
-        selector: '#conteudoNota',
-        height: '100%',
-        resize: false,
-        menubar: true,
-        branding: false,
-        promotion: false,
-        language: idiomaCarregado ? 'pt_BR' : undefined,
-        plugins: 'preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
-        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | charmap emoticons | removeformat | fullscreen preview code',
-        toolbar_mode: 'sliding',
-        quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 blockquote',
-        quickbars_insert_toolbar: 'quickimage quicktable',
-        contextmenu: 'link image table',
-        image_title: true,
-        automatic_uploads: true,
-        file_picker_types: 'image',
-        table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
-        autosave_ask_before_unload: true,
-        autosave_interval: '20s',
-        autosave_retention: '30m',
-        content_style: `
-          body { font-family: Inter, Arial, sans-serif; font-size: 15px; line-height: 1.7; color: #211F1B; }
-          img { max-width: 100%; height: auto; }
-        `,
-        setup: function (editor) {
-          editor.on('init', function () {
-            renderizarNotas();
-          });
-        }
-      });
-    }
-
-    function ativarModoFallback() {
-      modoFallback = true;
-      document.getElementById('editorFallbackAviso').style.display = 'block';
-      document.getElementById('conteudoNota').style.display = 'block';
-      toast('Editor avançado indisponível — usando modo texto simples', 'info');
-    }
-
-    function getConteudoAtual() {
-      if (modoFallback) {
-        return document.getElementById('conteudoNota').value;
-      }
-      let ed = tinymce.get('conteudoNota');
-      return ed ? ed.getContent() : '';
-    }
-
-    function setConteudoAtual(html) {
-      if (modoFallback) {
-        document.getElementById('conteudoNota').value = textoLimpo(html);
-        return;
-      }
-      let ed = tinymce.get('conteudoNota');
-      if (ed) { ed.setContent(html || ''); }
-    }
-
-    iniciarEditor();
-
-    // ---------- Exportar / Importar notas (backup portátil, independente do arquivo/navegador) ----------
-
-    function exportarNotas() {
-      if (notas.length == 0) {
-        toast('Você ainda não tem notas para exportar', 'info');
-        return;
-      }
-      let blob = new Blob([JSON.stringify(notas, null, 2)], { type: 'application/json' });
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement('a');
-      a.href = url;
-      a.download = 'notas-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      toast('Notas exportadas com sucesso', 'sucesso');
-    }
-
-    function importarNotas(event) {
-      let arquivo = event.target.files[0];
-      if (!arquivo) { return; }
-      let leitor = new FileReader();
-      leitor.onload = function (e) {
-        try {
-          let importadas = JSON.parse(e.target.result);
-          if (!Array.isArray(importadas)) { throw new Error('formato inválido'); }
-          let idsExistentes = new Set(notas.map(n => n.id));
-          let adicionadas = 0;
-          importadas.forEach(nota => {
-            if (!nota.id || idsExistentes.has(nota.id)) {
-              nota.id = Date.now() + Math.floor(Math.random() * 1000);
-            }
-            notas.push(nota);
-            idsExistentes.add(nota.id);
-            adicionadas++;
-          });
-          salvarLocal();
-          renderizarNotas();
-          toast(adicionadas + ' nota(s) importada(s) com sucesso', 'sucesso');
-        } catch (err) {
-          toast('Arquivo inválido para importação', 'perigo');
-        }
-        event.target.value = '';
-      };
-      leitor.readAsText(arquivo);
-    }
-
-    function toast(msg, tipo = 'info') {
-      let el = document.createElement('div');
-      el.className = 'toast ' + tipo;
-      el.innerText = msg;
-      document.getElementById('toastArea').appendChild(el);
-      setTimeout(() => { el.remove(); }, 2600);
-    }
-
-    function abrirModal(titulo, texto, callback) {
-      acaoConfirmada = callback;
-      document.getElementById('modalTitulo').innerText = titulo;
-      document.getElementById('modalTexto').innerText = texto;
-      document.getElementById('modalArea').classList.add('ativo');
-    }
-
-    function fecharModal() {
-      acaoConfirmada = null;
-      document.getElementById('modalArea').classList.remove('ativo');
-    }
-
-    document.getElementById('modalConfirmar').addEventListener('click', function () {
-      if (typeof acaoConfirmada == 'function') { acaoConfirmada(); }
-      fecharModal();
-    });
-
-    document.getElementById('modalArea').addEventListener('click', function (e) {
-      if (e.target.id == 'modalArea') { fecharModal(); }
-    });
-
-    function salvarLocal() {
-      localStorage.setItem('notas', JSON.stringify(notas));
-    }
-
-    function novaNota() {
-      notaAtual = null;
-      document.getElementById('tituloNota').value = '';
-      setConteudoAtual('');
-      renderizarNotas();
-      toast('Nova nota iniciada', 'info');
-    }
-
-    function limparEditor() {
-      document.getElementById('tituloNota').value = '';
-      setConteudoAtual('');
-      toast('Editor limpo', 'info');
-    }
-
-    function salvarNota() {
-      let titulo = document.getElementById('tituloNota').value.trim();
-      let conteudo = getConteudoAtual();
-      let criando = notaAtual == null;
-      if (titulo == '') { titulo = 'Sem título'; }
-      if (criando) {
-        let id = Date.now();
-        notas.push({
-          id: id,
-          titulo: titulo,
-          conteudo: conteudo,
-          criadaEm: new Date().toISOString(),
-          atualizadaEm: new Date().toISOString()
-        });
-        notaAtual = id;
-      } else {
-        notas = notas.map(nota => {
-          if (nota.id == notaAtual) {
-            nota.titulo = titulo;
-            nota.conteudo = conteudo;
-            nota.atualizadaEm = new Date().toISOString();
-          }
-          return nota;
-        });
-      }
-      salvarLocal();
-      renderizarNotas();
-      toast(criando ? 'Nota adicionada com sucesso' : 'Nota salva com sucesso', 'sucesso');
-    }
-
-    function editarNota(id) {
-      let nota = notas.find(item => item.id == id);
-      if (!nota) { return; }
-      notaAtual = id;
-      document.getElementById('tituloNota').value = nota.titulo;
-      setConteudoAtual(nota.conteudo);
-      renderizarNotas();
-    }
-
-    function confirmarExcluirNota() {
-      if (notaAtual == null) {
-        toast('Selecione uma nota para excluir', 'info');
-        return;
-      }
-      abrirModal('Excluir nota?', 'Essa ação vai apagar a nota selecionada de forma permanente.', function () {
-        excluirNota();
-      });
-    }
-
-    function excluirNota() {
-      notas = notas.filter(nota => nota.id != notaAtual);
-      notaAtual = null;
-      salvarLocal();
-      limparEditor();
-      renderizarNotas();
-      toast('Nota excluída com sucesso', 'perigo');
-    }
-
-    function confirmarExcluirTudo() {
-      if (notas.length == 0) {
-        toast('Você ainda não tem notas para excluir', 'info');
-        return;
-      }
-      abrirModal('Excluir todas as notas?', 'Todas as suas anotações serão apagadas definitivamente.', function () {
-        excluirTudo();
-      });
-    }
-
-    function excluirTudo() {
-      notas = [];
-      notaAtual = null;
-      salvarLocal();
-      limparEditor();
-      renderizarNotas();
-      toast('Todas as notas foram excluídas', 'perigo');
-    }
-
-    function textoLimpo(html) {
-      let div = document.createElement('div');
-      div.innerHTML = html;
-      return div.textContent || div.innerText || '';
-    }
-
-    function renderizarNotas() {
-      let busca = document.getElementById('buscar').value.toLowerCase();
-      let ordem = document.getElementById('ordenar').value;
-      let lista = [...notas];
-
-      lista = lista.filter(nota => {
-        let titulo = (nota.titulo || '').toLowerCase();
-        let conteudo = textoLimpo(nota.conteudo || '').toLowerCase();
-        return titulo.includes(busca) || conteudo.includes(busca);
-      });
-
-      lista.sort((a, b) => {
-        let dataA = new Date(a.atualizadaEm || a.data || a.criadaEm || 0);
-        let dataB = new Date(b.atualizadaEm || b.data || b.criadaEm || 0);
-        if (ordem == 'recente') { return dataB - dataA; }
-        if (ordem == 'antiga') { return dataA - dataB; }
-        if (ordem == 'az') { return (a.titulo || '').localeCompare(b.titulo || ''); }
-        if (ordem == 'za') { return (b.titulo || '').localeCompare(a.titulo || ''); }
-        return 0;
-      });
-
-      document.getElementById('contadorNotas').innerText = lista.length == 1 ? '1 nota' : lista.length + ' notas';
-
-      let html = '';
-      if (lista.length == 0) {
-        html = '<div class="vazio">Nenhuma nota encontrada</div>';
-      }
-
-      lista.forEach(nota => {
-        let ativo = nota.id == notaAtual ? 'ativa' : '';
-        let dataBase = nota.atualizadaEm || nota.data || nota.criadaEm;
-        let data = dataBase ? new Date(dataBase).toLocaleString('pt-BR') : '';
-        let resumo = textoLimpo(nota.conteudo || '').slice(0, 110);
-        html += `
-          <div class="nota ${ativo}" onclick="editarNota(${nota.id})">
-            <div class="nota-topo">
-              <div class="nota-titulo">${nota.titulo}</div>
-              <div class="nota-badge">nota</div>
             </div>
-            <div class="nota-data">${data}</div>
-            <div class="nota-resumo">${resumo || 'Sem conteúdo ainda...'}</div>
-          </div>
-        `;
-      });
 
-      document.getElementById('listaNotas').innerHTML = html;
-    }
+            <div class="topo-direita">
 
-    renderizarNotas();
+                <div class="usuario-card">
 
-  </script>
+                    <div class="avatar">VA</div>
+
+                    <div class="usuario-info">
+
+                        <strong>Vanrley</strong>
+
+                        <span class="status-online">Online</span>
+
+                    </div>
+
+                </div>
+
+                <div class="acoes">
+
+                    <button onclick="novaNota ( )">+ Nova nota</button>
+
+                    <button class="perigo" onclick="confirmarExcluirTudo ( )">Excluir tudo</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="layout">
+
+            <div class="lista">
+
+                <div class="filtros">
+
+                    <input type="text" id="buscar" placeholder="Filtrar notas..." oninput="renderizarNotas ( )">
+
+                    <select id="ordenar" onchange="renderizarNotas ( )">
+
+                        <option value="recente">Mais recentes</option>
+
+                        <option value="antiga">Mais antigas</option>
+
+                        <option value="az">Título A-Z</option>
+
+                        <option value="za">Título Z-A</option>
+
+                    </select>
+
+                </div>
+
+                <div class="contador-notas" id="contadorNotas">0 notas encontradas</div>
+
+                <div class="lista-scroll" id="listaNotas"></div>
+
+            </div>
+
+            <div class="editor">
+
+                <div class="campo">
+
+                    <label>Título</label>
+
+                    <input type="text" id="tituloNota" placeholder="Digite o título da nota">
+
+                </div>
+
+                <div class="campo campo-editor">
+
+                    <label>Anotação</label>
+
+                    <textarea id="conteudoNota" style="display: none;" aria-hidden="true"></textarea>
+
+                </div>
+
+                <div class="botoes-editor">
+
+                    <div class="botoes-grupo">
+
+                        <button class="secundario" onclick="limparEditor ( )">Limpar</button>
+
+                        <button class="perigo" onclick="confirmarExcluirNota ( )">Excluir</button>
+
+                    </div>
+
+                    <button class="botao-salvar" onclick="salvarNota ( )">Salvar nota</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="toast-area" id="toastArea"></div>
+
+    <div class="modal-area" id="modalArea">
+
+        <div class="modal">
+
+            <div class="modal-icone">!</div>
+
+            <h3 id="modalTitulo">Excluir nota?</h3>
+
+            <p id="modalTexto">Essa ação vai apagar a nota selecionada de forma permanente.</p>
+
+            <div class="modal-botoes">
+
+                <button class="secundario" onclick="fecharModal ( )">Cancelar</button>
+
+                <button class="perigo" id="modalConfirmar">Confirmar</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        let notas = JSON.parse ( localStorage.getItem ( 'notas' ) || '[ ]' );
+
+        let notaAtual = null;
+
+        let acaoConfirmada = null;
+
+
+
+        tinymce.init ( {
+
+            selector: '#conteudoNota',
+
+            height: '100%',
+
+            resize: false,
+
+            menubar: true,
+
+            branding: false,
+
+            promotion: false,
+
+            language: 'pt_BR',
+
+            plugins: 'preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
+
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | charmap emoticons | removeformat | fullscreen preview code',
+
+            toolbar_mode: 'sliding',
+
+            quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 blockquote',
+
+            quickbars_insert_toolbar: 'quickimage quicktable',
+
+            contextmenu: 'link image table',
+
+            image_title: true,
+
+            automatic_uploads: true,
+
+            file_picker_types: 'image',
+
+            table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+
+            autosave_ask_before_unload: true,
+
+            autosave_interval: '20s',
+
+            autosave_retention: '30m',
+
+            content_style: `
+
+                body {
+                    font-family: Inter, Arial, sans-serif;
+                    font-size: 15px;
+                    line-height: 1.7;
+                    color: #211F1B;
+                }
+
+                img {
+                    max-width: 100%;
+                    height: auto;
+                }
+
+            `
+
+        } );
+
+
+
+        function toast ( msg, tipo = 'info' ) {
+
+            let el = document.createElement ( 'div' );
+
+            el.className = 'toast ' + tipo;
+
+            el.innerText = msg;
+
+            document.getElementById ( 'toastArea' ).appendChild ( el );
+
+            setTimeout ( ( ) => {
+
+                el.remove ( );
+
+            }, 2600 );
+
+        }
+
+
+
+        function abrirModal ( titulo, texto, callback ) {
+
+            acaoConfirmada = callback;
+
+            document.getElementById ( 'modalTitulo' ).innerText = titulo;
+
+            document.getElementById ( 'modalTexto' ).innerText = texto;
+
+            document.getElementById ( 'modalArea' ).classList.add ( 'ativo' );
+
+        }
+
+
+
+        function fecharModal ( ) {
+
+            acaoConfirmada = null;
+
+            document.getElementById ( 'modalArea' ).classList.remove ( 'ativo' );
+
+        }
+
+
+
+        document.getElementById ( 'modalConfirmar' ).addEventListener ( 'click', function ( ) {
+
+            if ( typeof acaoConfirmada == 'function' ) {
+
+                acaoConfirmada ( );
+
+            }
+
+            fecharModal ( );
+
+        } );
+
+
+
+        document.getElementById ( 'modalArea' ).addEventListener ( 'click', function ( e ) {
+
+            if ( e.target.id == 'modalArea' ) {
+
+                fecharModal ( );
+
+            }
+
+        } );
+
+
+
+        function salvarLocal ( ) {
+
+            localStorage.setItem ( 'notas', JSON.stringify ( notas ) );
+
+        }
+
+
+
+        function novaNota ( ) {
+
+            notaAtual = null;
+
+            document.getElementById ( 'tituloNota' ).value = '';
+
+            tinymce.get ( 'conteudoNota' ).setContent ( '' );
+
+            renderizarNotas ( );
+
+            toast ( 'Nova nota iniciada', 'info' );
+
+        }
+
+
+
+        function limparEditor ( ) {
+
+            document.getElementById ( 'tituloNota' ).value = '';
+
+            tinymce.get ( 'conteudoNota' ).setContent ( '' );
+
+            toast ( 'Editor limpo', 'info' );
+
+        }
+
+
+
+        function salvarNota ( ) {
+
+            let titulo = document.getElementById ( 'tituloNota' ).value.trim ( );
+
+            let conteudo = tinymce.get ( 'conteudoNota' ).getContent ( );
+
+            let criando = notaAtual == null;
+
+            if ( titulo == '' ) {
+
+                titulo = 'Sem título';
+
+            }
+
+            if ( criando ) {
+
+                let id = Date.now ( );
+
+                notas.push ( {
+
+                    id: id,
+
+                    titulo: titulo,
+
+                    conteudo: conteudo,
+
+                    criadaEm: new Date ( ).toISOString ( ),
+
+                    atualizadaEm: new Date ( ).toISOString ( )
+
+                } );
+
+                notaAtual = id;
+
+            } else {
+
+                notas = notas.map ( nota => {
+
+                    if ( nota.id == notaAtual ) {
+
+                        nota.titulo = titulo;
+
+                        nota.conteudo = conteudo;
+
+                        nota.atualizadaEm = new Date ( ).toISOString ( );
+
+                    }
+
+                    return nota;
+
+                } );
+
+            }
+
+            salvarLocal ( );
+
+            renderizarNotas ( );
+
+            toast ( criando ? 'Nota adicionada com sucesso' : 'Nota salva com sucesso', 'sucesso' );
+
+        }
+
+
+
+        function editarNota ( id ) {
+
+            let nota = notas.find ( item => item.id == id );
+
+            if ( ! nota ) {
+
+                return;
+
+            }
+
+            notaAtual = id;
+
+            document.getElementById ( 'tituloNota' ).value = nota.titulo;
+
+            tinymce.get ( 'conteudoNota' ).setContent ( nota.conteudo );
+
+            renderizarNotas ( );
+
+        }
+
+
+
+        function confirmarExcluirNota ( ) {
+
+            if ( notaAtual == null ) {
+
+                toast ( 'Selecione uma nota para excluir', 'info' );
+
+                return;
+
+            }
+
+            abrirModal (
+
+                'Excluir nota?',
+
+                'Essa ação vai apagar a nota selecionada de forma permanente.',
+
+                function ( ) {
+
+                    excluirNota ( );
+
+                }
+
+            );
+
+        }
+
+
+
+        function excluirNota ( ) {
+
+            notas = notas.filter ( nota => nota.id != notaAtual );
+
+            notaAtual = null;
+
+            salvarLocal ( );
+
+            limparEditor ( );
+
+            renderizarNotas ( );
+
+            toast ( 'Nota excluída com sucesso', 'perigo' );
+
+        }
+
+
+
+        function confirmarExcluirTudo ( ) {
+
+            if ( notas.length == 0 ) {
+
+                toast ( 'Você ainda não tem notas para excluir', 'info' );
+
+                return;
+
+            }
+
+            abrirModal (
+
+                'Excluir todas as notas?',
+
+                'Todas as suas anotações serão apagadas definitivamente.',
+
+                function ( ) {
+
+                    excluirTudo ( );
+
+                }
+
+            );
+
+        }
+
+
+
+        function excluirTudo ( ) {
+
+            notas = [ ];
+
+            notaAtual = null;
+
+            salvarLocal ( );
+
+            limparEditor ( );
+
+            renderizarNotas ( );
+
+            toast ( 'Todas as notas foram excluídas', 'perigo' );
+
+        }
+
+
+
+        function textoLimpo ( html ) {
+
+            let div = document.createElement ( 'div' );
+
+            div.innerHTML = html;
+
+            return div.textContent || div.innerText || '';
+
+        }
+
+
+
+        function renderizarNotas ( ) {
+
+            let busca = document.getElementById ( 'buscar' ).value.toLowerCase ( );
+
+            let ordem = document.getElementById ( 'ordenar' ).value;
+
+            let lista = [ ...notas ];
+
+            lista = lista.filter ( nota => {
+
+                let titulo = ( nota.titulo || '' ).toLowerCase ( );
+
+                let conteudo = textoLimpo ( nota.conteudo || '' ).toLowerCase ( );
+
+                return titulo.includes ( busca ) || conteudo.includes ( busca );
+
+            } );
+
+            lista.sort ( ( a, b ) => {
+
+                let dataA = new Date ( a.atualizadaEm || a.data || a.criadaEm || 0 );
+
+                let dataB = new Date ( b.atualizadaEm || b.data || b.criadaEm || 0 );
+
+                if ( ordem == 'recente' ) {
+
+                    return dataB - dataA;
+
+                }
+
+                if ( ordem == 'antiga' ) {
+
+                    return dataA - dataB;
+
+                }
+
+                if ( ordem == 'az' ) {
+
+                    return ( a.titulo || '' ).localeCompare ( b.titulo || '' );
+
+                }
+
+                if ( ordem == 'za' ) {
+
+                    return ( b.titulo || '' ).localeCompare ( a.titulo || '' );
+
+                }
+
+                return 0;
+
+            } );
+
+            document.getElementById ( 'contadorNotas' ).innerText = lista.length == 1 ? '1 nota encontrada' : lista.length + ' notas encontradas';
+
+            let html = '';
+
+            if ( lista.length == 0 ) {
+
+                html = '<div class="vazio">Nenhuma nota encontrada</div>';
+
+            }
+
+            lista.forEach ( nota => {
+
+                let ativo = nota.id == notaAtual ? 'ativa' : '';
+
+                let dataBase = nota.atualizadaEm || nota.data || nota.criadaEm;
+
+                let data = dataBase ? new Date ( dataBase ).toLocaleString ( 'pt-BR' ) : '';
+
+                let resumo = textoLimpo ( nota.conteudo || '' ).slice ( 0, 110 );
+
+                html += `
+
+                    <div class="nota ${ ativo }" onclick="editarNota ( ${ nota.id } )">
+
+                        <div class="nota-topo">
+
+                            <div class="nota-titulo">${ nota.titulo }</div>
+
+                            <div class="nota-badge">nota</div>
+
+                        </div>
+
+                        <div class="nota-data">${ data }</div>
+
+                        <div class="nota-resumo">${ resumo || 'Sem conteúdo ainda...' }</div>
+
+                    </div>
+
+                `;
+
+            } );
+
+            document.getElementById ( 'listaNotas' ).innerHTML = html;
+
+        }
+
+
+
+        renderizarNotas ( );
+
+    </script>
 
 </body>
 </html>
