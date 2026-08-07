@@ -8,30 +8,27 @@
     <script src="https://cdn.jsdelivr.net/npm/tinymce-i18n@23.7.20/langs/pt_BR.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #10131a;
-            --bg-grain: #151a24;
-            --surface: #1a1f2b;
-            --surface-2: #212736;
-            --border: #2b3242;
-            --border-soft: #232936;
-            --paper: #eee8d8;
-            --paper-line: #e2dabf;
-            --ink: #e9e6dc;
-            --ink-dim: #8a92a3;
-            --ink-dark: #221d13;
-            --ink-dark-soft: #5a5140;
-            --accent: #e2a23e;
-            --accent-dim: rgba(226, 162, 62, 0.18);
-            --sage: #7fac96;
-            --danger: #d9605a;
-            --danger-dim: rgba(217, 96, 90, 0.16);
-            --radius: 14px;
-            --font-display: 'Fraunces', serif;
+            --bg: #0a0c0f;
+            --surface: #101318;
+            --surface-2: #161a21;
+            --surface-3: #1c212a;
+            --border: #2a2f38;
+            --border-strong: #3a4150;
+            --ink: #d5dae3;
+            --ink-dim: #6c7480;
+            --ink-faint: #454c58;
+            --accent: #f0a83e;
+            --accent-dim: rgba(240, 168, 62, 0.14);
+            --ok: #4ade80;
+            --ok-dim: rgba(74, 222, 128, 0.12);
+            --danger: #ff5c5c;
+            --danger-dim: rgba(255, 92, 92, 0.12);
+            --radius: 6px;
+            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
             --font-body: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * { box-sizing: border-box; }
@@ -40,7 +37,7 @@
             margin: 0;
             font-family: var(--font-body);
             background:
-                radial-gradient(circle at 15% 0%, rgba(226,162,62,0.05), transparent 40%),
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px),
                 var(--bg);
             color: var(--ink);
             overflow: hidden;
@@ -50,7 +47,7 @@
             max-width: 1280px;
             height: 100vh;
             margin: auto;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
         }
@@ -62,62 +59,63 @@
             justify-content: space-between;
             align-items: center;
             gap: 14px;
-            margin-bottom: 16px;
-            padding: 14px 18px;
+            margin-bottom: 12px;
+            padding: 12px 16px;
             border-radius: var(--radius);
-            background: linear-gradient(155deg, var(--surface-2), var(--surface));
+            background: var(--surface);
             border: 1px solid var(--border);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            border-left: 3px solid var(--accent);
             flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .topo::after {
-            content: '';
-            position: absolute;
-            left: 0; right: 0; bottom: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), transparent 65%);
-            opacity: 0.7;
         }
 
         .topo-info {
             display: flex;
             align-items: center;
-            gap: 13px;
+            gap: 12px;
             min-width: 0;
         }
 
         .app-icone {
-            width: 44px;
-            height: 44px;
+            width: 38px;
+            height: 38px;
             display: grid;
             place-items: center;
-            border-radius: 12px;
-            background: var(--accent-dim);
-            border: 1px solid rgba(226, 162, 62, 0.35);
+            border-radius: 4px;
+            background: var(--surface-3);
+            border: 1px solid var(--border-strong);
             color: var(--accent);
-            font-family: var(--font-display);
-            font-size: 20px;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 15px;
             flex-shrink: 0;
         }
 
         .topo-textos h1 {
             margin: 0;
-            font-family: var(--font-display);
+            font-family: var(--font-mono);
             color: var(--ink);
-            font-size: 23px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 700;
             line-height: 1.2;
-            letter-spacing: 0.2px;
+            letter-spacing: -0.2px;
+        }
+
+        .topo-textos h1::after {
+            content: '_';
+            color: var(--accent);
+            animation: piscar 1.1s step-end infinite;
         }
 
         .topo-textos p {
             margin: 4px 0 0;
             color: var(--ink-dim);
-            font-size: 12.5px;
+            font-size: 11.5px;
             font-family: var(--font-mono);
+        }
+
+        @keyframes piscar {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
         }
 
         .topo-direita {
@@ -138,23 +136,23 @@
             display: flex;
             align-items: center;
             gap: 9px;
-            padding: 6px 10px 6px 6px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.04);
+            padding: 5px 10px 5px 5px;
+            border-radius: var(--radius);
+            background: var(--surface-2);
             border: 1px solid var(--border);
         }
 
         .avatar {
-            width: 34px;
-            height: 34px;
+            width: 30px;
+            height: 30px;
             display: grid;
             place-items: center;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #c97a2a);
-            color: #201404;
-            font-family: var(--font-display);
-            font-size: 13px;
-            font-weight: 700;
+            border-radius: 4px;
+            background: var(--accent);
+            color: #1a1204;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 800;
         }
 
         .usuario-info {
@@ -164,13 +162,14 @@
 
         .usuario-info strong {
             color: var(--ink);
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
+            font-family: var(--font-mono);
         }
 
         .usuario-info span {
             color: var(--ink-dim);
-            font-size: 10.5px;
+            font-size: 10px;
             font-family: var(--font-mono);
         }
 
@@ -185,16 +184,15 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--sage);
-            box-shadow: 0 0 0 3px rgba(127, 172, 150, 0.18);
+            background: var(--ok);
         }
 
         /* ---------- controles ---------- */
 
         input, select, button {
-            font-family: var(--font-body);
-            border-radius: 10px;
-            font-size: 13.5px;
+            font-family: var(--font-mono);
+            border-radius: var(--radius);
+            font-size: 13px;
             outline: none;
         }
 
@@ -203,54 +201,53 @@
             background: var(--surface-2);
             color: var(--ink);
             border: 1px solid var(--border);
-            padding: 9px 12px;
+            padding: 9px 11px;
         }
 
-        input::placeholder { color: var(--ink-dim); }
+        input::placeholder { color: var(--ink-faint); }
 
         input:focus, select:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-dim);
         }
 
         select { cursor: pointer; }
 
         button {
             cursor: pointer;
-            border: 1px solid transparent;
+            border: 1px solid var(--border);
             background: var(--surface-2);
             color: var(--ink);
             padding: 9px 14px;
             font-weight: 500;
-            transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+            transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
         }
 
-        button:hover { transform: translateY(-1px); }
-        button:active { transform: translateY(0); }
-        button:focus-visible { box-shadow: 0 0 0 3px var(--accent-dim); }
+        button:hover { background: var(--surface-3); border-color: var(--border-strong); }
+        button:active { transform: translateY(1px); }
+        button:focus-visible { border-color: var(--accent); }
 
         .topo button {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--surface-2);
             color: var(--ink);
             border: 1px solid var(--border);
         }
 
         .topo button:first-child {
             background: var(--accent);
-            color: #201404;
+            color: #1a1204;
             border-color: var(--accent);
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        .topo button:first-child:hover { opacity: 0.92; }
+        .topo button:first-child:hover { background: #f5b957; }
 
         .topo button.perigo {
             background: transparent;
             color: var(--danger);
-            border: 1px solid rgba(217, 96, 90, 0.4);
+            border: 1px solid var(--border);
         }
 
-        .topo button.perigo:hover { background: var(--danger-dim); }
+        .topo button.perigo:hover { background: var(--danger-dim); border-color: var(--danger); }
 
         button.secundario {
             background: var(--surface-2);
@@ -261,38 +258,35 @@
         button.perigo {
             background: transparent;
             color: var(--danger);
-            border: 1px solid rgba(217, 96, 90, 0.4);
+            border: 1px solid var(--border);
         }
 
-        button.perigo:hover { background: var(--danger-dim); }
+        button.perigo:hover { background: var(--danger-dim); border-color: var(--danger); }
 
         /* ---------- layout ---------- */
 
         .layout {
             display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 16px;
+            grid-template-columns: 300px 1fr;
+            gap: 12px;
             min-height: 0;
             flex: 1;
         }
 
         .lista, .editor {
             border-radius: var(--radius);
-            padding: 14px;
+            padding: 12px;
             min-height: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
         }
 
         .lista {
-            background: var(--surface);
-            border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
         }
 
         .editor {
-            background: var(--paper);
-            border: 1px solid var(--paper-line);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -305,25 +299,23 @@
             flex-shrink: 0;
         }
 
-        .filtros select {
-            font-family: var(--font-mono);
-            font-size: 12.5px;
-        }
+        .filtros select { font-size: 12px; }
 
         .contador-notas {
-            font-size: 11px;
+            font-size: 10.5px;
             font-family: var(--font-mono);
-            color: var(--ink-dim);
+            color: var(--ink-faint);
             margin-bottom: 10px;
             flex-shrink: 0;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.05em;
         }
+
+        .contador-notas::before { content: '// '; }
 
         .lista-scroll {
             overflow-y: auto;
             padding-right: 4px;
-            padding-left: 2px;
             flex: 1;
             min-height: 0;
         }
@@ -331,49 +323,31 @@
         .lista-scroll::-webkit-scrollbar { width: 6px; }
 
         .lista-scroll::-webkit-scrollbar-thumb {
-            background: var(--border);
+            background: var(--border-strong);
             border-radius: 20px;
         }
 
-        /* index-card style note entries with a rolodex-tab signature */
+        /* nota entries — flat log-line style, no glow, no glass */
 
         .nota {
             position: relative;
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 11px 12px 11px 16px;
-            margin-bottom: 8px;
+            border-radius: 4px;
+            padding: 10px 11px 10px 13px;
+            margin-bottom: 7px;
             cursor: pointer;
             background: var(--surface-2);
-            transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-        }
-
-        .nota::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 10px;
-            bottom: 10px;
-            width: 3px;
-            border-radius: 3px;
-            background: var(--border);
-            transition: background 0.16s ease, box-shadow 0.16s ease;
+            border-left: 2px solid var(--border-strong);
+            transition: background 0.12s ease, border-left-color 0.12s ease;
         }
 
         .nota:hover {
-            border-color: rgba(226, 162, 62, 0.35);
-            transform: translateX(2px);
+            background: var(--surface-3);
         }
 
         .nota.ativa {
-            border-color: var(--accent);
-            background: linear-gradient(90deg, var(--accent-dim), var(--surface-2) 55%);
-            transform: translateX(4px);
-        }
-
-        .nota.ativa::before {
-            background: var(--accent);
-            box-shadow: 0 0 10px rgba(226, 162, 62, 0.5);
+            background: var(--surface-3);
+            border-left: 2px solid var(--accent);
         }
 
         .nota-topo {
@@ -384,9 +358,9 @@
         }
 
         .nota-titulo {
-            font-family: var(--font-display);
+            font-family: var(--font-body);
             font-weight: 600;
-            font-size: 14.5px;
+            font-size: 13.5px;
             color: var(--ink);
             margin-bottom: 3px;
             line-height: 1.35;
@@ -395,13 +369,13 @@
 
         .nota-badge {
             font-family: var(--font-mono);
-            font-size: 9.5px;
+            font-size: 9px;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-            padding: 3px 7px;
-            border-radius: 999px;
+            padding: 2px 6px;
+            border-radius: 3px;
             color: var(--ink-dim);
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--surface);
             border: 1px solid var(--border);
             white-space: nowrap;
             flex-shrink: 0;
@@ -409,13 +383,13 @@
 
         .nota-data {
             font-family: var(--font-mono);
-            font-size: 10.5px;
-            color: var(--ink-dim);
+            font-size: 10px;
+            color: var(--ink-faint);
         }
 
         .nota-resumo {
-            margin-top: 7px;
-            font-size: 12px;
+            margin-top: 6px;
+            font-size: 11.5px;
             color: var(--ink-dim);
             line-height: 1.5;
             display: -webkit-box;
@@ -426,17 +400,20 @@
         }
 
         .vazio {
-            padding: 22px 12px;
-            color: var(--ink-dim);
+            padding: 20px 12px;
+            color: var(--ink-faint);
             text-align: center;
-            font-size: 12.5px;
+            font-size: 12px;
             font-family: var(--font-mono);
             border: 1px dashed var(--border);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+            background: transparent;
         }
 
-        /* ---------- editor (paper) ---------- */
+        .vazio::before { content: '/* '; }
+        .vazio::after { content: ' */'; }
+
+        /* ---------- editor ---------- */
 
         .campo {
             display: grid;
@@ -446,30 +423,29 @@
         }
 
         .campo label {
-            font-size: 11px;
+            font-size: 10.5px;
             font-family: var(--font-mono);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--ink-dark-soft);
+            letter-spacing: 0.06em;
+            color: var(--ink-faint);
             font-weight: 500;
         }
 
+        .campo label::before { content: '# '; color: var(--ink-faint); }
+
         .campo input {
-            background: #fbf8f0;
-            border: 1px solid var(--paper-line);
-            color: var(--ink-dark);
-            font-family: var(--font-display);
-            font-size: 17px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: 15px;
             font-weight: 600;
             padding: 10px 12px;
         }
 
-        .campo input::placeholder { color: #a89f86; font-weight: 400; }
+        .campo input::placeholder { color: var(--ink-faint); font-weight: 400; }
 
-        .campo input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(226, 162, 62, 0.18);
-        }
+        .campo input:focus { border-color: var(--accent); }
 
         .campo-editor {
             flex: 1;
@@ -481,8 +457,8 @@
         .campo-editor .tox-tinymce {
             flex: 1 !important;
             min-height: 260px !important;
-            border-radius: 10px !important;
-            border-color: var(--paper-line) !important;
+            border-radius: 4px !important;
+            border-color: var(--border) !important;
             overflow: hidden;
         }
 
@@ -495,7 +471,7 @@
             flex-wrap: wrap;
             flex-shrink: 0;
             padding-top: 12px;
-            border-top: 1px dashed var(--paper-line);
+            border-top: 1px solid var(--border);
         }
 
         .botoes-grupo {
@@ -505,68 +481,54 @@
         }
 
         .botoes-editor button {
-            min-width: 100px;
-            height: 40px;
+            min-width: 96px;
+            height: 38px;
             font-weight: 500;
         }
 
-        .botoes-editor .secundario {
-            background: #fbf8f0;
-            border: 1px solid var(--paper-line);
-            color: var(--ink-dark);
-        }
-
-        .botoes-editor .perigo {
-            background: transparent;
-            border: 1px solid rgba(217, 96, 90, 0.45);
-            color: #b5443f;
-        }
-
-        .botoes-editor .perigo:hover { background: rgba(217, 96, 90, 0.1); }
-
         .botao-salvar {
-            background: var(--ink-dark);
-            color: var(--paper);
+            background: var(--accent);
+            color: #1a1204;
             min-width: 150px;
-            font-weight: 600;
-            border: 1px solid var(--ink-dark);
+            font-weight: 700;
+            border: 1px solid var(--accent);
         }
 
-        .botao-salvar:hover { opacity: 0.9; }
+        .botao-salvar:hover { background: #f5b957; }
 
         /* ---------- toasts & modal ---------- */
 
         .toast-area {
             position: fixed;
-            right: 18px;
-            bottom: 18px;
+            right: 16px;
+            bottom: 16px;
             display: grid;
-            gap: 10px;
+            gap: 8px;
             z-index: 99999;
         }
 
         .toast {
             min-width: 230px;
-            background: var(--surface-2);
+            background: var(--surface-3);
             color: var(--ink);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            border-radius: 10px;
-            padding: 12px 14px;
-            font-size: 13px;
-            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
-            animation: toastEntrar 0.25s ease;
+            border: 1px solid var(--border-strong);
+            border-left: 2px solid var(--accent);
+            border-radius: 4px;
+            padding: 11px 13px;
+            font-size: 12.5px;
+            font-family: var(--font-mono);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+            animation: toastEntrar 0.18s ease;
         }
 
-        .toast.sucesso { border-left-color: var(--sage); }
+        .toast.sucesso { border-left-color: var(--ok); }
         .toast.perigo { border-left-color: var(--danger); }
         .toast.info { border-left-color: var(--accent); }
 
         .modal-area {
             position: fixed;
             inset: 0;
-            background: rgba(8, 10, 15, 0.6);
-            backdrop-filter: blur(2px);
+            background: rgba(0, 0, 0, 0.65);
             display: none;
             align-items: center;
             justify-content: center;
@@ -578,40 +540,41 @@
 
         .modal {
             width: 100%;
-            max-width: 380px;
+            max-width: 370px;
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
-            animation: modalEntrar 0.22s ease;
+            border: 1px solid var(--border-strong);
+            border-left: 3px solid var(--danger);
+            border-radius: 4px;
+            padding: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            animation: modalEntrar 0.16s ease;
         }
 
         .modal-icone {
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             display: grid;
             place-items: center;
-            border-radius: 12px;
+            border-radius: 4px;
             background: var(--danger-dim);
             color: var(--danger);
-            font-family: var(--font-display);
-            font-size: 20px;
-            font-weight: 700;
+            font-family: var(--font-mono);
+            font-size: 17px;
+            font-weight: 800;
             margin-bottom: 12px;
         }
 
         .modal h3 {
             margin: 0 0 6px;
-            font-family: var(--font-display);
-            font-size: 18px;
+            font-family: var(--font-mono);
+            font-size: 15.5px;
             color: var(--ink);
         }
 
         .modal p {
             margin: 0;
             color: var(--ink-dim);
-            font-size: 13px;
+            font-size: 12.5px;
             line-height: 1.6;
         }
 
@@ -619,17 +582,17 @@
             display: flex;
             justify-content: flex-end;
             gap: 8px;
-            margin-top: 18px;
+            margin-top: 16px;
             flex-wrap: wrap;
         }
 
         @keyframes toastEntrar {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes modalEntrar {
-            from { opacity: 0; transform: scale(0.96); }
+            from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -667,7 +630,7 @@
 
         <div class="topo">
             <div class="topo-info">
-                <div class="app-icone">✦</div>
+                <div class="app-icone">#</div>
                 <div class="topo-textos">
                     <h1>Minhas Anotações</h1>
                     <p>Organize ideias, tarefas e registros em um só lugar</p>
