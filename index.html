@@ -1,1179 +1,1280 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minhas Anotações</title>
-    <script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tinymce-i18n@23.7.20/langs/pt_BR.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0a0c0f;
-            --surface: #101318;
-            --surface-2: #161a21;
-            --surface-3: #1c212a;
-            --border: #2a2f38;
-            --border-strong: #3a4150;
-            --ink: #d5dae3;
-            --ink-dim: #6c7480;
-            --ink-faint: #454c58;
-            --accent: #f0a83e;
-            --accent-dim: rgba(240, 168, 62, 0.14);
-            --ok: #4ade80;
-            --ok-dim: rgba(74, 222, 128, 0.12);
-            --danger: #ff5c5c;
-            --danger-dim: rgba(255, 92, 92, 0.12);
-            --radius: 6px;
-            --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-            --font-body: 'Inter', sans-serif;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            font-family: var(--font-body);
-            background:
-                repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px),
-                var(--bg);
-            color: var(--ink);
-            overflow: hidden;
-        }
-
-        .app {
-            max-width: 1280px;
-            height: 100vh;
-            margin: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ---------- topo ---------- */
-
-        .topo {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 12px;
-            padding: 12px 16px;
-            border-radius: var(--radius);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            flex-shrink: 0;
-        }
-
-        .topo-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 0;
-        }
-
-        .app-icone {
-            width: 38px;
-            height: 38px;
-            display: grid;
-            place-items: center;
-            border-radius: 4px;
-            background: var(--surface-3);
-            border: 1px solid var(--border-strong);
-            color: var(--accent);
-            font-family: var(--font-mono);
-            font-weight: 700;
-            font-size: 15px;
-            flex-shrink: 0;
-        }
-
-        .topo-textos h1 {
-            margin: 0;
-            font-family: var(--font-mono);
-            color: var(--ink);
-            font-size: 17px;
-            font-weight: 700;
-            line-height: 1.2;
-            letter-spacing: -0.2px;
-        }
-
-        .topo-textos h1::after {
-            content: '_';
-            color: var(--accent);
-            animation: piscar 1.1s step-end infinite;
-        }
-
-        .topo-textos p {
-            margin: 4px 0 0;
-            color: var(--ink-dim);
-            font-size: 11.5px;
-            font-family: var(--font-mono);
-        }
-
-        @keyframes piscar {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
-        .topo-direita {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .acoes {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .usuario-card {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            padding: 5px 10px 5px 5px;
-            border-radius: var(--radius);
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-        }
-
-        .avatar {
-            width: 30px;
-            height: 30px;
-            display: grid;
-            place-items: center;
-            border-radius: 4px;
-            background: var(--accent);
-            color: #1a1204;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .usuario-info {
-            display: grid;
-            line-height: 1.2;
-        }
-
-        .usuario-info strong {
-            color: var(--ink);
-            font-size: 12px;
-            font-weight: 600;
-            font-family: var(--font-mono);
-        }
-
-        .usuario-info span {
-            color: var(--ink-dim);
-            font-size: 10px;
-            font-family: var(--font-mono);
-        }
-
-        .status-online {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .status-online::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--ok);
-        }
-
-        /* ---------- controles ---------- */
-
-        input, select, button {
-            font-family: var(--font-mono);
-            border-radius: var(--radius);
-            font-size: 13px;
-            outline: none;
-        }
-
-        input, select {
-            width: 100%;
-            background: var(--surface-2);
-            color: var(--ink);
-            border: 1px solid var(--border);
-            padding: 9px 11px;
-        }
-
-        input::placeholder { color: var(--ink-faint); }
-
-        input:focus, select:focus {
-            border-color: var(--accent);
-        }
-
-        select { cursor: pointer; }
-
-        button {
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: var(--surface-2);
-            color: var(--ink);
-            padding: 9px 14px;
-            font-weight: 500;
-            transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
-        }
-
-        button:hover { background: var(--surface-3); border-color: var(--border-strong); }
-        button:active { transform: translateY(1px); }
-        button:focus-visible { border-color: var(--accent); }
-
-        .topo button {
-            background: var(--surface-2);
-            color: var(--ink);
-            border: 1px solid var(--border);
-        }
-
-        .topo button:first-child {
-            background: var(--accent);
-            color: #1a1204;
-            border-color: var(--accent);
-            font-weight: 700;
-        }
-
-        .topo button:first-child:hover { background: #f5b957; }
-
-        .topo button.perigo {
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid var(--border);
-        }
-
-        .topo button.perigo:hover { background: var(--danger-dim); border-color: var(--danger); }
-
-        button.secundario {
-            background: var(--surface-2);
-            color: var(--ink);
-            border: 1px solid var(--border);
-        }
-
-        button.perigo {
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid var(--border);
-        }
-
-        button.perigo:hover { background: var(--danger-dim); border-color: var(--danger); }
-
-        /* ---------- layout ---------- */
-
-        .layout {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 12px;
-            min-height: 0;
-            flex: 1;
-        }
-
-        .lista, .editor {
-            border-radius: var(--radius);
-            padding: 12px;
-            min-height: 0;
-            background: var(--surface);
-            border: 1px solid var(--border);
-        }
-
-        .lista {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .editor {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .filtros {
-            display: grid;
-            gap: 8px;
-            margin-bottom: 10px;
-            flex-shrink: 0;
-        }
-
-        .filtros select { font-size: 12px; }
-
-        .contador-notas {
-            font-size: 10.5px;
-            font-family: var(--font-mono);
-            color: var(--ink-faint);
-            margin-bottom: 10px;
-            flex-shrink: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .contador-notas::before { content: '// '; }
-
-        .lista-scroll {
-            overflow-y: auto;
-            padding-right: 4px;
-            flex: 1;
-            min-height: 0;
-        }
-
-        .lista-scroll::-webkit-scrollbar { width: 6px; }
-
-        .lista-scroll::-webkit-scrollbar-thumb {
-            background: var(--border-strong);
-            border-radius: 20px;
-        }
-
-        /* nota entries — flat log-line style, no glow, no glass */
-
-        .nota {
-            position: relative;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 10px 11px 10px 13px;
-            margin-bottom: 7px;
-            cursor: pointer;
-            background: var(--surface-2);
-            border-left: 2px solid var(--border-strong);
-            transition: background 0.12s ease, border-left-color 0.12s ease;
-        }
-
-        .nota:hover {
-            background: var(--surface-3);
-        }
-
-        .nota.ativa {
-            background: var(--surface-3);
-            border-left: 2px solid var(--accent);
-        }
-
-        .nota-topo {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .nota-titulo {
-            font-family: var(--font-body);
-            font-weight: 600;
-            font-size: 13.5px;
-            color: var(--ink);
-            margin-bottom: 3px;
-            line-height: 1.35;
-            word-break: break-word;
-        }
-
-        .nota-badge {
-            font-family: var(--font-mono);
-            font-size: 9px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: var(--ink-dim);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .nota-data {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--ink-faint);
-        }
-
-        .nota-resumo {
-            margin-top: 6px;
-            font-size: 11.5px;
-            color: var(--ink-dim);
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            word-break: break-word;
-        }
-
-        .vazio {
-            padding: 20px 12px;
-            color: var(--ink-faint);
-            text-align: center;
-            font-size: 12px;
-            font-family: var(--font-mono);
-            border: 1px dashed var(--border);
-            border-radius: 4px;
-            background: transparent;
-        }
-
-        .vazio::before { content: '/* '; }
-        .vazio::after { content: ' */'; }
-
-        /* ---------- editor ---------- */
-
-        .campo {
-            display: grid;
-            gap: 6px;
-            margin-bottom: 10px;
-            flex-shrink: 0;
-        }
-
-        .campo label {
-            font-size: 10.5px;
-            font-family: var(--font-mono);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--ink-faint);
-            font-weight: 500;
-        }
-
-        .campo label::before { content: '# '; color: var(--ink-faint); }
-
-        .campo input {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            color: var(--ink);
-            font-family: var(--font-body);
-            font-size: 15px;
-            font-weight: 600;
-            padding: 10px 12px;
-        }
-
-        .campo input::placeholder { color: var(--ink-faint); font-weight: 400; }
-
-        .campo input:focus { border-color: var(--accent); }
-
-        .campo-editor {
-            flex: 1;
-            min-height: 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .campo-editor .tox-tinymce {
-            flex: 1 !important;
-            min-height: 260px !important;
-            border-radius: 4px !important;
-            border-color: var(--border) !important;
-            overflow: hidden;
-        }
-
-        .botoes-editor {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-            flex-shrink: 0;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
-        }
-
-        .botoes-grupo {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .botoes-editor button {
-            min-width: 96px;
-            height: 38px;
-            font-weight: 500;
-        }
-
-        .botao-salvar {
-            background: var(--accent);
-            color: #1a1204;
-            min-width: 150px;
-            font-weight: 700;
-            border: 1px solid var(--accent);
-        }
-
-        .botao-salvar:hover { background: #f5b957; }
-
-        /* ---------- toasts & modal ---------- */
-
-        .toast-area {
-            position: fixed;
-            right: 16px;
-            bottom: 16px;
-            display: grid;
-            gap: 8px;
-            z-index: 99999;
-        }
-
-        .toast {
-            min-width: 230px;
-            background: var(--surface-3);
-            color: var(--ink);
-            border: 1px solid var(--border-strong);
-            border-left: 2px solid var(--accent);
-            border-radius: 4px;
-            padding: 11px 13px;
-            font-size: 12.5px;
-            font-family: var(--font-mono);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
-            animation: toastEntrar 0.18s ease;
-        }
-
-        .toast.sucesso { border-left-color: var(--ok); }
-        .toast.perigo { border-left-color: var(--danger); }
-        .toast.info { border-left-color: var(--accent); }
-
-        .modal-area {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 18px;
-            z-index: 99998;
-        }
-
-        .modal-area.ativo { display: flex; }
-
-        .modal {
-            width: 100%;
-            max-width: 370px;
-            background: var(--surface);
-            border: 1px solid var(--border-strong);
-            border-left: 3px solid var(--danger);
-            border-radius: 4px;
-            padding: 18px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            animation: modalEntrar 0.16s ease;
-        }
-
-        .modal-icone {
-            width: 36px;
-            height: 36px;
-            display: grid;
-            place-items: center;
-            border-radius: 4px;
-            background: var(--danger-dim);
-            color: var(--danger);
-            font-family: var(--font-mono);
-            font-size: 17px;
-            font-weight: 800;
-            margin-bottom: 12px;
-        }
-
-        .modal h3 {
-            margin: 0 0 6px;
-            font-family: var(--font-mono);
-            font-size: 15.5px;
-            color: var(--ink);
-        }
-
-        .modal p {
-            margin: 0;
-            color: var(--ink-dim);
-            font-size: 12.5px;
-            line-height: 1.6;
-        }
-
-        .modal-botoes {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-
-        @keyframes toastEntrar {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes modalEntrar {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* ---------- responsivo ---------- */
-
-        @media (max-width: 850px) {
-            body { overflow: auto; }
-            .app { height: auto; min-height: 100vh; }
-            .layout { grid-template-columns: 1fr; }
-            .lista-scroll { max-height: 320px; }
-            .topo { align-items: flex-start; flex-direction: column; }
-            .topo-direita { width: 100%; justify-content: space-between; }
-            .acoes { width: 100%; }
-            .acoes button { flex: 1; }
-            .campo-editor .tox-tinymce { height: 420px !important; min-height: 420px !important; }
-        }
-
-        @media (max-width: 600px) {
-            .botoes-editor { flex-direction: column; align-items: stretch; }
-            .botoes-grupo { width: 100%; }
-            .botoes-grupo button, .botao-salvar { flex: 1; width: 100%; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.001ms !important;
-                transition-duration: 0.001ms !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quadro de Orçamentos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg: #f2f3f5;
+        --surface: #ffffff;
+        --surface-2: #f7f8fa;
+        --border: #e6e7eb;
+        --border-soft: #eef0f3;
+        --ink: #1d1d1f;
+        --ink-dim: #6e6e73;
+        --ink-faint: #a1a1a6;
+        --blue: #0071e3;
+        --blue-dim: rgba(0, 113, 227, 0.09);
+        --green: #2ea043;
+        --green-dim: rgba(46, 160, 67, 0.1);
+        --red: #ff3b30;
+        --red-dim: rgba(255, 59, 48, 0.09);
+        --radius-lg: 18px;
+        --radius-md: 12px;
+        --radius-sm: 8px;
+        --shadow-1: 0 1px 2px rgba(20, 20, 25, 0.05), 0 1px 1px rgba(20,20,25,.03);
+        --shadow-2: 0 10px 30px rgba(20, 20, 25, 0.10), 0 2px 8px rgba(20,20,25,.05);
+        --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        font-family: var(--font);
+        background: var(--bg);
+        color: var(--ink);
+        height: 100vh;
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .app { display: flex; flex-direction: column; height: 100vh; }
+
+    /* ---------- topbar ---------- */
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 14px 22px;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: saturate(180%) blur(16px);
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+    .marca { display: flex; align-items: center; gap: 10px; min-width: 0; }
+
+    .marca-icone {
+        width: 34px; height: 34px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #0071e3, #34c0ff);
+        display: grid; place-items: center;
+        color: white; font-weight: 800; font-size: 15px;
+        flex-shrink: 0;
+    }
+
+    .quadro-titulo {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--ink);
+        border-radius: 8px;
+        padding: 4px 8px;
+        min-width: 60px;
+        max-width: 320px;
+    }
+
+    .quadro-titulo:hover, .quadro-titulo:focus { background: var(--surface-2); }
+
+    .quadro-sub {
+        font-size: 11.5px;
+        color: var(--ink-faint);
+        padding-left: 8px;
+    }
+
+    .topbar-meio { flex: 1; display: flex; justify-content: center; min-width: 0; }
+
+    .busca {
+        position: relative;
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .busca input {
+        width: 100%;
+        padding: 8px 12px 8px 32px;
+        border-radius: 980px;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        font-family: var(--font);
+        font-size: 13px;
+        outline: none;
+        color: var(--ink);
+    }
+
+    .busca input:focus { background: var(--surface); border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-dim); }
+
+    .busca svg {
+        position: absolute;
+        left: 11px; top: 50%;
+        transform: translateY(-50%);
+        color: var(--ink-faint);
+        pointer-events: none;
+    }
+
+    .topbar-direita { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    button {
+        font-family: var(--font);
+        cursor: pointer;
+        border: none;
+        outline: none;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 980px;
+        font-size: 13px;
+        font-weight: 600;
+        background: var(--surface-2);
+        color: var(--ink);
+        border: 1px solid var(--border);
+        transition: background .15s ease, transform .1s ease, border-color .15s ease;
+        white-space: nowrap;
+    }
+
+    .btn:hover { background: #ececef; }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primario { background: var(--blue); color: white; border-color: var(--blue); }
+    .btn-primario:hover { background: #0077ed; }
+
+    .btn-perigo { color: var(--red); }
+    .btn-perigo:hover { background: var(--red-dim); border-color: rgba(255,59,48,.3); }
+
+    .btn-icone {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        display: grid; place-items: center;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        color: var(--ink-dim);
+        padding: 0;
+    }
+
+    .btn-icone:hover { background: #ececef; color: var(--ink); }
+
+    .menu-wrap { position: relative; }
+
+    .menu-drop {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-2);
+        padding: 6px;
+        min-width: 190px;
+        display: none;
+        z-index: 500;
+    }
+
+    .menu-drop.aberto { display: block; }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        width: 100%;
+        text-align: left;
+        padding: 9px 10px;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .menu-item:hover { background: var(--surface-2); }
+    .menu-item.perigo { color: var(--red); }
+    .menu-item.perigo:hover { background: var(--red-dim); }
+
+    /* ---------- board ---------- */
+
+    .board-wrap { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; padding: 18px 22px; }
+
+    .board {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        height: 100%;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .coluna {
+        width: 302px;
+        flex-shrink: 0;
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-1);
+        display: flex;
+        flex-direction: column;
+        max-height: 100%;
+    }
+
+    .coluna.arrastando-col { opacity: 0.4; }
+
+    .coluna-cabecalho {
+        padding: 14px 14px 10px;
+        border-top-left-radius: var(--radius-lg);
+        border-top-right-radius: var(--radius-lg);
+        border-top: 3px solid var(--cor, var(--blue));
+        cursor: grab;
+        flex-shrink: 0;
+    }
+
+    .coluna-cabecalho:active { cursor: grabbing; }
+
+    .coluna-topo-linha {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+    }
+
+    .coluna-titulo-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+
+    .coluna-ponto {
+        width: 9px; height: 9px;
+        border-radius: 50%;
+        background: var(--cor, var(--blue));
+        flex-shrink: 0;
+    }
+
+    .coluna-titulo {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ink);
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: var(--font);
+        padding: 2px 4px;
+        border-radius: 6px;
+        min-width: 20px;
+        max-width: 170px;
+    }
+
+    .coluna-titulo:hover, .coluna-titulo:focus { background: var(--surface-2); }
+
+    .coluna-acoes-btn {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--ink-faint);
+        display: grid; place-items: center;
+        flex-shrink: 0;
+    }
+
+    .coluna-acoes-btn:hover { background: var(--surface-2); color: var(--ink); }
+
+    .coluna-stats {
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--ink-faint);
+        font-weight: 500;
+        padding-left: 17px;
+    }
+
+    .coluna-stats .valor-total { font-weight: 700; color: var(--ink-dim); }
+
+    .coluna-corpo {
+        flex: 1;
+        overflow-y: auto;
+        padding: 4px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-height: 40px;
+    }
+
+    .coluna-corpo::-webkit-scrollbar { width: 6px; }
+    .coluna-corpo::-webkit-scrollbar-thumb { background: #d9dbe0; border-radius: 20px; }
+
+    .coluna-corpo.arrasto-sobre { background: var(--blue-dim); border-radius: 10px; }
+
+    .coluna-rodape { padding: 8px 10px 12px; flex-shrink: 0; }
+
+    .btn-add-cartao {
+        width: 100%;
+        text-align: left;
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--ink-dim);
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-add-cartao:hover { background: var(--surface-2); color: var(--ink); }
+
+    /* ---------- cartao ---------- */
+
+    .cartao {
+        background: var(--surface);
+        border: 1px solid var(--border-soft);
+        border-radius: var(--radius-md);
+        padding: 11px 12px;
+        box-shadow: var(--shadow-1);
+        cursor: grab;
+        transition: box-shadow .15s ease, transform .1s ease;
+    }
+
+    .cartao:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
+    .cartao:active { cursor: grabbing; }
+    .cartao.arrastando { opacity: 0.35; }
+    .cartao.oculto-filtro { display: none; }
+
+    .cartao-topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+
+    .cartao-id {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--ink);
+    }
+
+    .cartao-valor {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--green);
+        background: var(--green-dim);
+        padding: 2px 7px;
+        border-radius: 6px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .cartao-linha {
+        font-size: 12px;
+        color: var(--ink-dim);
+        margin-top: 2px;
+        display: flex;
+        gap: 4px;
+        line-height: 1.4;
+    }
+
+    .cartao-linha b { color: var(--ink); font-weight: 600; }
+
+    .cartao-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 9px;
+    }
+
+    .tag-chip {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        padding: 2px 7px;
+        border-radius: 6px;
+        background: var(--surface-2);
+        color: var(--ink-dim);
+        border: 1px solid var(--border);
+    }
+
+    /* ---------- coluna nova (placeholder) ---------- */
+
+    .coluna-nova {
+        width: 260px;
+        flex-shrink: 0;
+        border: 1.5px dashed var(--border);
+        border-radius: var(--radius-lg);
+        background: transparent;
+        color: var(--ink-faint);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 13.5px;
+        font-weight: 600;
+        min-height: 64px;
+        align-self: flex-start;
+    }
+
+    .coluna-nova:hover { background: rgba(255,255,255,0.6); color: var(--ink-dim); border-color: var(--ink-faint); }
+
+    /* ---------- modais ---------- */
+
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 20, 25, 0.35);
+        backdrop-filter: blur(3px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        z-index: 9998;
+    }
+
+    .overlay.ativo { display: flex; }
+
+    .modal {
+        width: 100%;
+        max-width: 440px;
+        background: var(--surface);
+        border-radius: 20px;
+        box-shadow: var(--shadow-2);
+        padding: 22px;
+        animation: entrar .18s ease;
+        max-height: 88vh;
+        overflow-y: auto;
+    }
+
+    .modal.pequeno { max-width: 340px; }
+
+    @keyframes entrar { from { opacity:0; transform: scale(.97) translateY(6px);} to {opacity:1; transform:scale(1) translateY(0);} }
+
+    .modal h3 {
+        margin: 0 0 4px;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+    }
+
+    .modal .modal-sub { margin: 0 0 18px; font-size: 12.5px; color: var(--ink-faint); }
+
+    .campo { margin-bottom: 14px; }
+
+    .campo label {
+        display: block;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--ink-dim);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .campo input, .campo textarea {
+        width: 100%;
+        padding: 9px 11px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        font-family: var(--font);
+        font-size: 13.5px;
+        color: var(--ink);
+        outline: none;
+        resize: vertical;
+    }
+
+    .campo input:focus, .campo textarea:focus { background: var(--surface); border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-dim); }
+
+    .campo-linha2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .paleta { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .cor-op {
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 12px;
+    }
+
+    .cor-op.selecionada { border-color: var(--ink); }
+
+    .modal-botoes {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+    }
+
+    .modal-botoes .lado { display: flex; gap: 8px; }
+
+    .icone-alerta {
+        width: 42px; height: 42px;
+        border-radius: 12px;
+        background: var(--red-dim);
+        color: var(--red);
+        display: grid; place-items: center;
+        font-weight: 800;
+        font-size: 19px;
+        margin-bottom: 12px;
+    }
+
+    /* ---------- toasts ---------- */
+
+    .toast-area {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        display: grid;
+        gap: 8px;
+        z-index: 99999;
+    }
+
+    .toast {
+        min-width: 230px;
+        background: var(--ink);
+        color: white;
+        border-radius: 12px;
+        padding: 11px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        box-shadow: var(--shadow-2);
+        animation: subir .2s ease;
+    }
+
+    .toast.sucesso { background: #1f8b3b; }
+    .toast.perigo { background: #d92f27; }
+
+    @keyframes subir { from {opacity:0; transform: translateY(8px);} to {opacity:1; transform:translateY(0);} }
+
+    @media (max-width: 700px) {
+        .topbar-meio { display: none; }
+        .coluna-stats .valor-total { display: none; }
+    }
+</style>
 </head>
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <div class="topo">
-            <div class="topo-info">
-                <div class="app-icone">#</div>
-                <div class="topo-textos">
-                    <h1>Minhas Anotações</h1>
-                    <p>Organize ideias, tarefas e registros em um só lugar</p>
-                </div>
-            </div>
-            <div class="topo-direita">
-                <div class="usuario-card">
-                    <div class="avatar">VA</div>
-                    <div class="usuario-info">
-                        <strong>Vanrley</strong>
-                        <span class="status-online">Online</span>
-                    </div>
-                </div>
-                <div class="acoes">
-                    <button onclick="novaNota ( )">Nova nota</button>
-                    <button class="perigo" onclick="confirmarExcluirTudo ( )">Excluir tudo</button>
-                </div>
+    <div class="topbar">
+        <div class="marca">
+            <div class="marca-icone">K</div>
+            <div>
+                <input type="text" id="quadroTitulo" class="quadro-titulo" value="Quadro de Orçamentos">
             </div>
         </div>
 
-        <div class="layout">
-
-            <div class="lista">
-                <div class="filtros">
-                    <input type="text" id="buscar" placeholder="Filtrar notas..." oninput="renderizarNotas ( )">
-                    <select id="ordenar" onchange="renderizarNotas ( )">
-                        <option value="recente">Mais recentes</option>
-                        <option value="antiga">Mais antigas</option>
-                        <option value="az">Título A-Z</option>
-                        <option value="za">Título Z-A</option>
-                    </select>
-                </div>
-                <div class="contador-notas" id="contadorNotas">0 notas encontradas</div>
-                <div class="lista-scroll" id="listaNotas"></div>
+        <div class="topbar-meio">
+            <div class="busca">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="busca" placeholder="Buscar por orçamento, paciente ou tag..." oninput="filtrarCartoes()">
             </div>
-
-            <div class="editor">
-                <div class="campo">
-                    <label>Título</label>
-                    <input type="text" id="tituloNota" placeholder="Digite o título da nota">
-                </div>
-                <div class="campo campo-editor">
-                    <label>Anotação</label>
-                    <textarea id="conteudoNota"></textarea>
-                </div>
-                <div class="botoes-editor">
-                    <div class="botoes-grupo">
-                        <button class="secundario" onclick="limparEditor ( )">Limpar</button>
-                        <button class="perigo" onclick="confirmarExcluirNota ( )">Excluir</button>
-                    </div>
-                    <button class="botao-salvar" onclick="salvarNota ( )">Salvar nota</button>
-                </div>
-            </div>
-
         </div>
 
-    </div>
-
-    <div class="toast-area" id="toastArea"></div>
-
-    <div class="modal-area" id="modalArea">
-        <div class="modal">
-            <div class="modal-icone">!</div>
-            <h3 id="modalTitulo">Excluir nota?</h3>
-            <p id="modalTexto">Essa ação vai apagar a nota selecionada de forma permanente.</p>
-            <div class="modal-botoes">
-                <button class="secundario" onclick="fecharModal ( )">Cancelar</button>
-                <button class="perigo" id="modalConfirmar">Confirmar</button>
+        <div class="topbar-direita">
+            <button class="btn" onclick="abrirModalColuna(null)">+ Coluna</button>
+            <div class="menu-wrap">
+                <button class="btn-icone" onclick="alternarMenu(event)" title="Mais opções">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                </button>
+                <div class="menu-drop" id="menuDrop">
+                    <button class="menu-item" onclick="exportarJSON()">⬇️ Exportar dados (JSON)</button>
+                    <button class="menu-item" onclick="document.getElementById('inputImportar').click()">⬆️ Importar dados (JSON)</button>
+                    <button class="menu-item perigo" onclick="confirmarReiniciar()">↺ Reiniciar quadro</button>
+                </div>
             </div>
+            <input type="file" id="inputImportar" accept="application/json" style="display:none" onchange="importarJSON(event)">
         </div>
     </div>
 
-    <script>
+    <div class="board-wrap">
+        <div class="board" id="board"></div>
+    </div>
 
-        let notas = JSON.parse ( localStorage.getItem ( 'notas' ) || '[ ]' );
+</div>
 
-        let notaAtual = null;
+<!-- modal cartão -->
+<div class="overlay" id="overlayCartao">
+    <div class="modal">
+        <h3 id="cartaoModalTitulo">Novo cartão</h3>
+        <p class="modal-sub">Preencha os dados do orçamento / tarefa</p>
 
-        let acaoConfirmada = null;
+        <div class="campo">
+            <label>Identificação (nº do orçamento/pedido)</label>
+            <input type="text" id="campoId" placeholder="Ex: 01000000015">
+        </div>
 
+        <div class="campo-linha2">
+            <div class="campo">
+                <label>Paciente / cliente</label>
+                <input type="text" id="campoPaciente" placeholder="Nome do paciente">
+            </div>
+            <div class="campo">
+                <label>Telefone</label>
+                <input type="text" id="campoTelefone" placeholder="(00) 00000-0000">
+            </div>
+        </div>
 
+        <div class="campo-linha2">
+            <div class="campo">
+                <label>Convênio</label>
+                <input type="text" id="campoConvenio" placeholder="Particular, plano...">
+            </div>
+            <div class="campo">
+                <label>Valor (R$)</label>
+                <input type="text" id="campoValor" placeholder="0,00" inputmode="decimal">
+            </div>
+        </div>
 
-        tinymce.init ( {
+        <div class="campo">
+            <label>Responsável</label>
+            <input type="text" id="campoResponsavel" placeholder="Nome do responsável">
+        </div>
 
-            selector: '#conteudoNota',
+        <div class="campo">
+            <label>Tags (separe por vírgula)</label>
+            <input type="text" id="campoTags" placeholder="TGP, TGO, LDL...">
+        </div>
 
-            height: '100%',
+        <div class="modal-botoes">
+            <div class="lado">
+                <button class="btn btn-perigo" id="btnExcluirCartao" onclick="confirmarExcluirCartao()" style="display:none">Excluir</button>
+            </div>
+            <div class="lado">
+                <button class="btn" onclick="fecharOverlay('overlayCartao')">Cancelar</button>
+                <button class="btn btn-primario" onclick="salvarCartao()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            resize: false,
+<!-- modal coluna -->
+<div class="overlay" id="overlayColuna">
+    <div class="modal pequeno">
+        <h3 id="colunaModalTitulo">Nova coluna</h3>
+        <p class="modal-sub">Nomeie e escolha uma cor para a etapa</p>
 
-            menubar: true,
+        <div class="campo">
+            <label>Nome da coluna</label>
+            <input type="text" id="campoColunaNome" placeholder="Ex: Em negociação">
+        </div>
 
-            branding: false,
+        <div class="campo">
+            <label>Cor</label>
+            <div class="paleta" id="paletaCores"></div>
+        </div>
 
-            promotion: false,
+        <div class="modal-botoes">
+            <div class="lado">
+                <button class="btn btn-perigo" id="btnExcluirColuna" onclick="confirmarExcluirColuna()" style="display:none">Excluir coluna</button>
+            </div>
+            <div class="lado">
+                <button class="btn" onclick="fecharOverlay('overlayColuna')">Cancelar</button>
+                <button class="btn btn-primario" onclick="salvarColuna()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            language: 'pt_BR',
+<!-- modal confirmação genérica -->
+<div class="overlay" id="overlayConfirmar">
+    <div class="modal pequeno">
+        <div class="icone-alerta">!</div>
+        <h3 id="confirmarTitulo">Confirmar ação?</h3>
+        <p class="modal-sub" id="confirmarTexto" style="margin-bottom:6px;">Essa ação não poderá ser desfeita.</p>
+        <div class="modal-botoes" style="justify-content:flex-end;">
+            <button class="btn" onclick="fecharOverlay('overlayConfirmar')">Cancelar</button>
+            <button class="btn btn-primario" style="background:var(--red);border-color:var(--red)" id="btnConfirmarAcao">Confirmar</button>
+        </div>
+    </div>
+</div>
 
-            plugins: 'preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link media table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help quickbars emoticons',
+<div class="toast-area" id="toastArea"></div>
 
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | charmap emoticons | removeformat | fullscreen preview code',
+<script>
 
-            toolbar_mode: 'sliding',
+/* =========================================================================
+   CAMADA DE DADOS
+   Hoje os dados ficam no localStorage do navegador.
+   Quando integrar com PHP + banco de dados, troque apenas as funções
+   carregarQuadro() e salvarQuadro() abaixo por chamadas fetch(), por
+   exemplo:
+     async function carregarQuadro() {
+         const resp = await fetch('api/quadro.php?acao=carregar');
+         return await resp.json();
+     }
+     async function salvarQuadro(quadro) {
+         await fetch('api/quadro.php?acao=salvar', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(quadro)
+         });
+     }
+   O resto do código (renderização, drag and drop, modais) não depende
+   de onde os dados vêm, então não precisa mudar mais nada.
+   ========================================================================= */
 
-            quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 blockquote',
+const CHAVE_LOCALSTORAGE = 'quadro_kanban_v1';
 
-            quickbars_insert_toolbar: 'quickimage quicktable',
+const CORES = [
+    { nome: 'Azul',    valor: '#0071e3' },
+    { nome: 'Laranja',  valor: '#ff9500' },
+    { nome: 'Verde',    valor: '#2ea043' },
+    { nome: 'Roxo',     valor: '#af52de' },
+    { nome: 'Vermelho', valor: '#ff3b30' },
+    { nome: 'Âmbar',    valor: '#ffcc00' },
+    { nome: 'Cinza',    valor: '#8e8e93' },
+    { nome: 'Ciano',    valor: '#00b8a9' }
+];
 
-            contextmenu: 'link image table',
+function quadroPadrao ( ) {
+    return {
+        titulo: 'Quadro de Orçamentos',
+        colunas: [
+            {
+                id: 'c1', titulo: 'Novas oportunidades', cor: '#ff9500',
+                cartoes: [
+                    { id: gerarId(), identificacao: '01000000004', paciente: '01000003', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 30, responsavel: 'UNIWARE', tags: ['TGP','TGO'] },
+                    { id: gerarId(), identificacao: '01000000006', paciente: '01000003', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 46, responsavel: 'UNIWARE', tags: ['TGP','TGO','LDL'] }
+                ]
+            },
+            {
+                id: 'c2', titulo: 'Negociação', cor: '#00b8a9',
+                cartoes: [
+                    { id: gerarId(), identificacao: '01000000009', paciente: '01000005', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 46, responsavel: 'UNIWARE', tags: ['LDL','HDL','TGP','TGO'] }
+                ]
+            },
+            {
+                id: 'c3', titulo: 'Stand-by', cor: '#af52de',
+                cartoes: [
+                    { id: gerarId(), identificacao: '01000000010', paciente: '01000006', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 31, responsavel: 'UNIWARE', tags: ['TGP','LDL','HDL'] }
+                ]
+            },
+            {
+                id: 'c4', titulo: 'Aguardando fechamento', cor: '#ffcc00',
+                cartoes: [
+                    { id: gerarId(), identificacao: '01000000008', paciente: '01000004', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 46, responsavel: 'UNIWARE', tags: ['TGP','TGO','LDL','HDL'] }
+                ]
+            },
+            {
+                id: 'c5', titulo: 'Ganhos', cor: '#2ea043',
+                cartoes: [
+                    { id: gerarId(), identificacao: '014131114', paciente: '01000002', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 383.5, responsavel: 'UNIWARE', tags: ['TGO','TGO','POT','O17'] }
+                ]
+            },
+            {
+                id: 'c6', titulo: 'Perdidos', cor: '#ff3b30',
+                cartoes: [
+                    { id: gerarId(), identificacao: '014131116', paciente: '01000007', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 76, responsavel: 'UNIWARE', tags: ['HDL','HEM','TGP'] }
+                ]
+            }
+        ]
+    };
+}
 
-            image_title: true,
+function carregarQuadro ( ) {
+    const bruto = localStorage.getItem ( CHAVE_LOCALSTORAGE );
+    if ( ! bruto ) return quadroPadrao ( );
+    try {
+        return JSON.parse ( bruto );
+    } catch ( e ) {
+        return quadroPadrao ( );
+    }
+}
 
-            automatic_uploads: true,
+function salvarQuadro ( quadro ) {
+    localStorage.setItem ( CHAVE_LOCALSTORAGE, JSON.stringify ( quadro ) );
+}
 
-            file_picker_types: 'image',
+function gerarId ( ) {
+    return 'id_' + Date.now ( ).toString ( 36 ) + Math.random ( ).toString ( 36 ).slice ( 2, 8 );
+}
 
-            table_toolbar: 'tableprops tabledelete | tableinsertrowbefore tableinsertrowafter tabledeleterow | tableinsertcolbefore tableinsertcolafter tabledeletecol',
+/* ========================================================================= */
 
-            autosave_ask_before_unload: true,
+let quadro = carregarQuadro ( );
+let colunaEditandoId = null;
+let cartaoEditando = null; // { colunaId, cartaoId } ou null se for criação
+let corSelecionada = CORES[0].valor;
+let acaoConfirmada = null;
 
-            autosave_interval: '20s',
+document.getElementById ( 'quadroTitulo' ).value = quadro.titulo || 'Quadro de Orçamentos';
+document.getElementById ( 'quadroTitulo' ).addEventListener ( 'input', function ( ) {
+    quadro.titulo = this.value;
+    salvarQuadro ( quadro );
+} );
 
-            autosave_retention: '30m',
+function persistir ( ) { salvarQuadro ( quadro ); }
 
-            content_style: `
+function formatarValor ( n ) {
+    n = Number ( n ) || 0;
+    return n.toLocaleString ( 'pt-BR', { style: 'currency', currency: 'BRL' } );
+}
 
-                body {
-                    font-family: Poppins, Arial, sans-serif;
-                    font-size: 15px;
-                    line-height: 1.7;
-                    color: #111827;
-                }
+function toast ( msg, tipo = '' ) {
+    const el = document.createElement ( 'div' );
+    el.className = 'toast ' + tipo;
+    el.innerText = msg;
+    document.getElementById ( 'toastArea' ).appendChild ( el );
+    setTimeout ( ( ) => el.remove ( ), 2600 );
+}
 
-                img {
-                    max-width: 100%;
-                    height: auto;
-                }
+function abrirOverlay ( id ) { document.getElementById ( id ).classList.add ( 'ativo' ); }
+function fecharOverlay ( id ) { document.getElementById ( id ).classList.remove ( 'ativo' ); }
 
-            `
+document.querySelectorAll ( '.overlay' ).forEach ( ov => {
+    ov.addEventListener ( 'click', e => { if ( e.target === ov ) ov.classList.remove ( 'ativo' ); } );
+} );
 
+function alternarMenu ( e ) {
+    e.stopPropagation ( );
+    document.getElementById ( 'menuDrop' ).classList.toggle ( 'aberto' );
+}
+document.addEventListener ( 'click', ( ) => document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' ) );
+
+/* ---------- render ---------- */
+
+function renderBoard ( ) {
+    const board = document.getElementById ( 'board' );
+    board.innerHTML = '';
+
+    quadro.colunas.forEach ( coluna => {
+        board.appendChild ( criarElementoColuna ( coluna ) );
+    } );
+
+    const novaColBtn = document.createElement ( 'button' );
+    novaColBtn.className = 'coluna-nova';
+    novaColBtn.innerHTML = '+ Adicionar coluna';
+    novaColBtn.onclick = ( ) => abrirModalColuna ( null );
+    board.appendChild ( novaColBtn );
+
+    ativarArrastarColunas ( );
+    filtrarCartoes ( );
+}
+
+function criarElementoColuna ( coluna ) {
+    const total = coluna.cartoes.reduce ( ( soma, c ) => soma + ( Number ( c.valor ) || 0 ), 0 );
+
+    const el = document.createElement ( 'div' );
+    el.className = 'coluna';
+    el.dataset.id = coluna.id;
+    el.draggable = false;
+
+    el.innerHTML = `
+        <div class="coluna-cabecalho" style="--cor:${ coluna.cor }" draggable="true">
+            <div class="coluna-topo-linha">
+                <div class="coluna-titulo-wrap">
+                    <span class="coluna-ponto"></span>
+                    <input class="coluna-titulo" value="${ escapar ( coluna.titulo ) }" />
+                </div>
+                <button class="coluna-acoes-btn" title="Editar coluna">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                </button>
+            </div>
+            <div class="coluna-stats">
+                <span>${ coluna.cartoes.length } cartão${ coluna.cartoes.length == 1 ? '' : 'ões' }</span>
+                <span class="valor-total">${ formatarValor ( total ) }</span>
+            </div>
+        </div>
+        <div class="coluna-corpo" data-coluna-corpo="${ coluna.id }"></div>
+        <div class="coluna-rodape">
+            <button class="btn-add-cartao">+ Adicionar cartão</button>
+        </div>
+    `;
+
+    const corpo = el.querySelector ( '.coluna-corpo' );
+    coluna.cartoes.forEach ( cartao => corpo.appendChild ( criarElementoCartao ( coluna.id, cartao ) ) );
+
+    el.querySelector ( '.coluna-titulo' ).addEventListener ( 'change', function ( ) {
+        coluna.titulo = this.value.trim ( ) || 'Sem nome';
+        this.value = coluna.titulo;
+        persistir ( );
+    } );
+
+    el.querySelector ( '.coluna-acoes-btn' ).addEventListener ( 'click', ( ) => abrirModalColuna ( coluna.id ) );
+    el.querySelector ( '.btn-add-cartao' ).addEventListener ( 'click', ( ) => abrirModalCartao ( coluna.id, null ) );
+
+    ativarArrastarCartoes ( corpo );
+
+    return el;
+}
+
+function criarElementoCartao ( colunaId, cartao ) {
+    const el = document.createElement ( 'div' );
+    el.className = 'cartao';
+    el.draggable = true;
+    el.dataset.id = cartao.id;
+    el.dataset.colunaId = colunaId;
+
+    const tags = ( cartao.tags || [ ] ).map ( t => `<span class="tag-chip">${ escapar ( t ) }</span>` ).join ( '' );
+
+    el.innerHTML = `
+        <div class="cartao-topo">
+            <span class="cartao-id">${ escapar ( cartao.identificacao || 'Sem identificação' ) }</span>
+            <span class="cartao-valor">${ formatarValor ( cartao.valor ) }</span>
+        </div>
+        ${ cartao.paciente ? `<div class="cartao-linha"><b>Paciente:</b> ${ escapar ( cartao.paciente ) }</div>` : '' }
+        ${ cartao.telefone ? `<div class="cartao-linha"><b>Tel:</b> ${ escapar ( cartao.telefone ) }</div>` : '' }
+        ${ cartao.convenio ? `<div class="cartao-linha"><b>Convênio:</b> ${ escapar ( cartao.convenio ) }</div>` : '' }
+        ${ cartao.responsavel ? `<div class="cartao-linha"><b>Resp.:</b> ${ escapar ( cartao.responsavel ) }</div>` : '' }
+        ${ tags ? `<div class="cartao-tags">${ tags }</div>` : '' }
+    `;
+
+    el.addEventListener ( 'click', ( ) => abrirModalCartao ( colunaId, cartao.id ) );
+
+    el.addEventListener ( 'dragstart', ( ) => {
+        el.classList.add ( 'arrastando' );
+    } );
+
+    el.addEventListener ( 'dragend', ( ) => {
+        el.classList.remove ( 'arrastando' );
+        sincronizarOrdemCartoes ( );
+        atualizarEstatisticasColunas ( );
+        persistir ( );
+    } );
+
+    return el;
+}
+
+function escapar ( texto ) {
+    const div = document.createElement ( 'div' );
+    div.innerText = texto == null ? '' : String ( texto );
+    return div.innerHTML;
+}
+
+/* ---------- arrastar e soltar: cartões ---------- */
+
+function ativarArrastarCartoes ( corpoEl ) {
+    corpoEl.addEventListener ( 'dragover', e => {
+        e.preventDefault ( );
+        const arrastando = document.querySelector ( '.cartao.arrastando' );
+        if ( ! arrastando ) return;
+        corpoEl.classList.add ( 'arrasto-sobre' );
+        const depois = elementoDepoisDoMouse ( corpoEl, e.clientY, '.cartao:not(.arrastando)' );
+        if ( depois == null ) {
+            corpoEl.appendChild ( arrastando );
+        } else {
+            corpoEl.insertBefore ( arrastando, depois );
+        }
+    } );
+
+    corpoEl.addEventListener ( 'dragleave', e => {
+        if ( e.target === corpoEl ) corpoEl.classList.remove ( 'arrasto-sobre' );
+    } );
+
+    corpoEl.addEventListener ( 'drop', e => {
+        e.preventDefault ( );
+        corpoEl.classList.remove ( 'arrasto-sobre' );
+    } );
+}
+
+function elementoDepoisDoMouse ( container, posicao, seletor ) {
+    const itens = [ ...container.querySelectorAll ( seletor ) ];
+    return itens.reduce ( ( maisProximo, item ) => {
+        const box = item.getBoundingClientRect ( );
+        const offset = posicao - box.top - box.height / 2;
+        if ( offset < 0 && offset > maisProximo.offset ) {
+            return { offset, elemento: item };
+        }
+        return maisProximo;
+    }, { offset: Number.NEGATIVE_INFINITY, elemento: null } ).elemento;
+}
+
+function sincronizarOrdemCartoes ( ) {
+    document.querySelectorAll ( '.coluna-corpo' ).forEach ( corpoEl => {
+        const colunaId = corpoEl.dataset.colunaCorpo;
+        const coluna = quadro.colunas.find ( c => c.id == colunaId );
+        if ( ! coluna ) return;
+        const idsNaOrdem = [ ...corpoEl.querySelectorAll ( '.cartao' ) ].map ( c => c.dataset.id );
+        const mapaCartoes = { };
+        quadro.colunas.forEach ( c => c.cartoes.forEach ( ct => mapaCartoes[ ct.id ] = ct ) );
+        coluna.cartoes = idsNaOrdem.map ( id => mapaCartoes[ id ] ).filter ( Boolean );
+    } );
+
+    // remove cartões de colunas antigas quando movidos para outra coluna
+    const idsVisiveis = new Set ( [ ...document.querySelectorAll ( '.cartao' ) ].map ( c => c.dataset.id ) );
+    quadro.colunas.forEach ( coluna => {
+        coluna.cartoes = coluna.cartoes.filter ( c => idsVisiveis.has ( c.id ) );
+    } );
+}
+
+function atualizarEstatisticasColunas ( ) {
+    quadro.colunas.forEach ( coluna => {
+        const el = document.querySelector ( `.coluna[data-id="${ coluna.id }"]` );
+        if ( ! el ) return;
+        const total = coluna.cartoes.reduce ( ( soma, c ) => soma + ( Number ( c.valor ) || 0 ), 0 );
+        const stats = el.querySelector ( '.coluna-stats' );
+        stats.innerHTML = `<span>${ coluna.cartoes.length } cartão${ coluna.cartoes.length == 1 ? '' : 'ões' }</span><span class="valor-total">${ formatarValor ( total ) }</span>`;
+    } );
+}
+
+/* ---------- arrastar e soltar: colunas ---------- */
+
+function ativarArrastarColunas ( ) {
+    const board = document.getElementById ( 'board' );
+
+    document.querySelectorAll ( '.coluna-cabecalho' ).forEach ( cab => {
+        cab.addEventListener ( 'dragstart', e => {
+            cab.closest ( '.coluna' ).classList.add ( 'arrastando-col' );
+            e.dataTransfer.effectAllowed = 'move';
         } );
-
-
-
-        function toast ( msg, tipo = 'info' ) {
-
-            let el = document.createElement ( 'div' );
-
-            el.className = 'toast ' + tipo;
-
-            el.innerText = msg;
-
-            document.getElementById ( 'toastArea' ).appendChild ( el );
-
-            setTimeout ( ( ) => {
-
-                el.remove ( );
-
-            }, 2600 );
-
-        }
-
-
-
-        function abrirModal ( titulo, texto, callback ) {
-
-            acaoConfirmada = callback;
-
-            document.getElementById ( 'modalTitulo' ).innerText = titulo;
-
-            document.getElementById ( 'modalTexto' ).innerText = texto;
-
-            document.getElementById ( 'modalArea' ).classList.add ( 'ativo' );
-
-        }
-
-
-
-        function fecharModal ( ) {
-
-            acaoConfirmada = null;
-
-            document.getElementById ( 'modalArea' ).classList.remove ( 'ativo' );
-
-        }
-
-
-
-        document.getElementById ( 'modalConfirmar' ).addEventListener ( 'click', function ( ) {
-
-            if ( typeof acaoConfirmada == 'function' ) {
-
-                acaoConfirmada ( );
-
-            }
-
-            fecharModal ( );
-
+        cab.addEventListener ( 'dragend', ( ) => {
+            cab.closest ( '.coluna' ).classList.remove ( 'arrastando-col' );
+            sincronizarOrdemColunas ( );
+            persistir ( );
         } );
+    } );
 
-
-
-        document.getElementById ( 'modalArea' ).addEventListener ( 'click', function ( e ) {
-
-            if ( e.target.id == 'modalArea' ) {
-
-                fecharModal ( );
-
-            }
-
-        } );
-
-
-
-        function salvarLocal ( ) {
-
-            localStorage.setItem ( 'notas', JSON.stringify ( notas ) );
-
+    board.addEventListener ( 'dragover', e => {
+        const arrastando = document.querySelector ( '.coluna.arrastando-col' );
+        if ( ! arrastando ) return;
+        e.preventDefault ( );
+        const depois = elementoDepoisDoMouseX ( board, e.clientX, '.coluna:not(.arrastando-col)' );
+        if ( depois == null ) {
+            board.insertBefore ( arrastando, document.querySelector ( '.coluna-nova' ) );
+        } else {
+            board.insertBefore ( arrastando, depois );
         }
+    } );
+}
 
-
-
-        function novaNota ( ) {
-
-            notaAtual = null;
-
-            document.getElementById ( 'tituloNota' ).value = '';
-
-            tinymce.get ( 'conteudoNota' ).setContent ( '' );
-
-            renderizarNotas ( );
-
-            toast ( 'Nova nota iniciada', 'info' );
-
+function elementoDepoisDoMouseX ( container, posicao, seletor ) {
+    const itens = [ ...container.querySelectorAll ( seletor ) ];
+    return itens.reduce ( ( maisProximo, item ) => {
+        const box = item.getBoundingClientRect ( );
+        const offset = posicao - box.left - box.width / 2;
+        if ( offset < 0 && offset > maisProximo.offset ) {
+            return { offset, elemento: item };
         }
+        return maisProximo;
+    }, { offset: Number.NEGATIVE_INFINITY, elemento: null } ).elemento;
+}
 
+function sincronizarOrdemColunas ( ) {
+    const idsNaOrdem = [ ...document.querySelectorAll ( '.coluna' ) ].map ( c => c.dataset.id );
+    const mapaColunas = { };
+    quadro.colunas.forEach ( c => mapaColunas[ c.id ] = c );
+    quadro.colunas = idsNaOrdem.map ( id => mapaColunas[ id ] ).filter ( Boolean );
+}
 
+/* ---------- modal de cartão ---------- */
 
-        function limparEditor ( ) {
+function abrirModalCartao ( colunaId, cartaoId ) {
+    cartaoEditando = { colunaId, cartaoId };
+    const coluna = quadro.colunas.find ( c => c.id == colunaId );
+    const cartao = cartaoId ? coluna.cartoes.find ( c => c.id == cartaoId ) : null;
 
-            document.getElementById ( 'tituloNota' ).value = '';
+    document.getElementById ( 'cartaoModalTitulo' ).innerText = cartao ? 'Editar cartão' : 'Novo cartão';
+    document.getElementById ( 'campoId' ).value = cartao ? cartao.identificacao || '' : '';
+    document.getElementById ( 'campoPaciente' ).value = cartao ? cartao.paciente || '' : '';
+    document.getElementById ( 'campoTelefone' ).value = cartao ? cartao.telefone || '' : '';
+    document.getElementById ( 'campoConvenio' ).value = cartao ? cartao.convenio || '' : '';
+    document.getElementById ( 'campoValor' ).value = cartao ? cartao.valor || '' : '';
+    document.getElementById ( 'campoResponsavel' ).value = cartao ? cartao.responsavel || '' : '';
+    document.getElementById ( 'campoTags' ).value = cartao ? ( cartao.tags || [ ] ).join ( ', ' ) : '';
 
-            tinymce.get ( 'conteudoNota' ).setContent ( '' );
+    document.getElementById ( 'btnExcluirCartao' ).style.display = cartao ? 'inline-flex' : 'none';
 
-            toast ( 'Editor limpo', 'info' );
+    abrirOverlay ( 'overlayCartao' );
+    setTimeout ( ( ) => document.getElementById ( 'campoId' ).focus ( ), 50 );
+}
 
+function salvarCartao ( ) {
+    const { colunaId, cartaoId } = cartaoEditando;
+    const coluna = quadro.colunas.find ( c => c.id == colunaId );
+    if ( ! coluna ) return;
+
+    const dados = {
+        identificacao: document.getElementById ( 'campoId' ).value.trim ( ) || 'Sem identificação',
+        paciente: document.getElementById ( 'campoPaciente' ).value.trim ( ),
+        telefone: document.getElementById ( 'campoTelefone' ).value.trim ( ),
+        convenio: document.getElementById ( 'campoConvenio' ).value.trim ( ),
+        valor: parseFloat ( document.getElementById ( 'campoValor' ).value.replace ( ',', '.' ) ) || 0,
+        responsavel: document.getElementById ( 'campoResponsavel' ).value.trim ( ),
+        tags: document.getElementById ( 'campoTags' ).value.split ( ',' ).map ( t => t.trim ( ) ).filter ( Boolean )
+    };
+
+    if ( cartaoId ) {
+        const cartao = coluna.cartoes.find ( c => c.id == cartaoId );
+        Object.assign ( cartao, dados );
+        toast ( 'Cartão atualizado', 'sucesso' );
+    } else {
+        coluna.cartoes.push ( { id: gerarId ( ), ...dados } );
+        toast ( 'Cartão criado', 'sucesso' );
+    }
+
+    persistir ( );
+    fecharOverlay ( 'overlayCartao' );
+    renderBoard ( );
+}
+
+function confirmarExcluirCartao ( ) {
+    abrirConfirmacao (
+        'Excluir cartão?',
+        'Esse cartão será removido permanentemente do quadro.',
+        ( ) => {
+            const { colunaId, cartaoId } = cartaoEditando;
+            const coluna = quadro.colunas.find ( c => c.id == colunaId );
+            coluna.cartoes = coluna.cartoes.filter ( c => c.id != cartaoId );
+            persistir ( );
+            fecharOverlay ( 'overlayCartao' );
+            renderBoard ( );
+            toast ( 'Cartão excluído', 'perigo' );
         }
+    );
+}
 
+/* ---------- modal de coluna ---------- */
 
+function montarPaletaCores ( ) {
+    const paleta = document.getElementById ( 'paletaCores' );
+    paleta.innerHTML = '';
+    CORES.forEach ( c => {
+        const btn = document.createElement ( 'button' );
+        btn.type = 'button';
+        btn.className = 'cor-op' + ( c.valor == corSelecionada ? ' selecionada' : '' );
+        btn.style.background = c.valor;
+        btn.title = c.nome;
+        btn.onclick = ( ) => { corSelecionada = c.valor; montarPaletaCores ( ); };
+        paleta.appendChild ( btn );
+    } );
+}
 
-        function salvarNota ( ) {
+function abrirModalColuna ( colunaId ) {
+    colunaEditandoId = colunaId;
+    const coluna = colunaId ? quadro.colunas.find ( c => c.id == colunaId ) : null;
 
-            let titulo = document.getElementById ( 'tituloNota' ).value.trim ( );
+    document.getElementById ( 'colunaModalTitulo' ).innerText = coluna ? 'Editar coluna' : 'Nova coluna';
+    document.getElementById ( 'campoColunaNome' ).value = coluna ? coluna.titulo : '';
+    corSelecionada = coluna ? coluna.cor : CORES[ quadro.colunas.length % CORES.length ].valor;
+    document.getElementById ( 'btnExcluirColuna' ).style.display = coluna ? 'inline-flex' : 'none';
 
-            let conteudo = tinymce.get ( 'conteudoNota' ).getContent ( );
+    montarPaletaCores ( );
+    abrirOverlay ( 'overlayColuna' );
+    setTimeout ( ( ) => document.getElementById ( 'campoColunaNome' ).focus ( ), 50 );
+}
 
-            let criando = notaAtual == null;
+function salvarColuna ( ) {
+    const nome = document.getElementById ( 'campoColunaNome' ).value.trim ( ) || 'Sem nome';
 
-            if ( titulo == '' ) {
+    if ( colunaEditandoId ) {
+        const coluna = quadro.colunas.find ( c => c.id == colunaEditandoId );
+        coluna.titulo = nome;
+        coluna.cor = corSelecionada;
+        toast ( 'Coluna atualizada', 'sucesso' );
+    } else {
+        quadro.colunas.push ( { id: gerarId ( ), titulo: nome, cor: corSelecionada, cartoes: [ ] } );
+        toast ( 'Coluna criada', 'sucesso' );
+    }
 
-                titulo = 'Sem título';
+    persistir ( );
+    fecharOverlay ( 'overlayColuna' );
+    renderBoard ( );
+}
 
-            }
-
-            if ( criando ) {
-
-                let id = Date.now ( );
-
-                notas.push ( {
-
-                    id: id,
-
-                    titulo: titulo,
-
-                    conteudo: conteudo,
-
-                    criadaEm: new Date ( ).toISOString ( ),
-
-                    atualizadaEm: new Date ( ).toISOString ( )
-
-                } );
-
-                notaAtual = id;
-
-            } else {
-
-                notas = notas.map ( nota => {
-
-                    if ( nota.id == notaAtual ) {
-
-                        nota.titulo = titulo;
-
-                        nota.conteudo = conteudo;
-
-                        nota.atualizadaEm = new Date ( ).toISOString ( );
-
-                    }
-
-                    return nota;
-
-                } );
-
-            }
-
-            salvarLocal ( );
-
-            renderizarNotas ( );
-
-            toast ( criando ? 'Nota adicionada com sucesso' : 'Nota salva com sucesso', 'sucesso' );
-
+function confirmarExcluirColuna ( ) {
+    abrirConfirmacao (
+        'Excluir coluna?',
+        'Todos os cartões dessa coluna serão excluídos junto.',
+        ( ) => {
+            quadro.colunas = quadro.colunas.filter ( c => c.id != colunaEditandoId );
+            persistir ( );
+            fecharOverlay ( 'overlayColuna' );
+            renderBoard ( );
+            toast ( 'Coluna excluída', 'perigo' );
         }
+    );
+}
 
+/* ---------- confirmação genérica ---------- */
 
+function abrirConfirmacao ( titulo, texto, callback ) {
+    document.getElementById ( 'confirmarTitulo' ).innerText = titulo;
+    document.getElementById ( 'confirmarTexto' ).innerText = texto;
+    acaoConfirmada = callback;
+    abrirOverlay ( 'overlayConfirmar' );
+}
 
-        function editarNota ( id ) {
+document.getElementById ( 'btnConfirmarAcao' ).addEventListener ( 'click', ( ) => {
+    if ( typeof acaoConfirmada === 'function' ) acaoConfirmada ( );
+    fecharOverlay ( 'overlayConfirmar' );
+} );
 
-            let nota = notas.find ( item => item.id == id );
-
-            if ( ! nota ) {
-
-                return;
-
-            }
-
-            notaAtual = id;
-
-            document.getElementById ( 'tituloNota' ).value = nota.titulo;
-
-            tinymce.get ( 'conteudoNota' ).setContent ( nota.conteudo );
-
-            renderizarNotas ( );
-
+function confirmarReiniciar ( ) {
+    document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' );
+    abrirConfirmacao (
+        'Reiniciar quadro?',
+        'Isso vai apagar tudo e voltar para os dados de exemplo.',
+        ( ) => {
+            quadro = quadroPadrao ( );
+            persistir ( );
+            document.getElementById ( 'quadroTitulo' ).value = quadro.titulo;
+            renderBoard ( );
+            toast ( 'Quadro reiniciado', 'perigo' );
         }
+    );
+}
 
+/* ---------- busca / filtro ---------- */
 
+function filtrarCartoes ( ) {
+    const termo = document.getElementById ( 'busca' ).value.trim ( ).toLowerCase ( );
+    document.querySelectorAll ( '.cartao' ).forEach ( el => {
+        if ( ! termo ) { el.classList.remove ( 'oculto-filtro' ); return; }
+        const texto = el.innerText.toLowerCase ( );
+        el.classList.toggle ( 'oculto-filtro', ! texto.includes ( termo ) );
+    } );
+}
 
-        function confirmarExcluirNota ( ) {
+/* ---------- exportar / importar ---------- */
 
-            if ( notaAtual == null ) {
+function exportarJSON ( ) {
+    document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' );
+    const blob = new Blob ( [ JSON.stringify ( quadro, null, 2 ) ], { type: 'application/json' } );
+    const url = URL.createObjectURL ( blob );
+    const a = document.createElement ( 'a' );
+    a.href = url;
+    a.download = 'quadro-orcamentos.json';
+    a.click ( );
+    URL.revokeObjectURL ( url );
+    toast ( 'Dados exportados', 'sucesso' );
+}
 
-                toast ( 'Selecione uma nota para excluir', 'info' );
-
-                return;
-
-            }
-
-            abrirModal (
-
-                'Excluir nota?',
-
-                'Essa ação vai apagar a nota selecionada de forma permanente.',
-
-                function ( ) {
-
-                    excluirNota ( );
-
-                }
-
-            );
-
+function importarJSON ( evento ) {
+    document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' );
+    const arquivo = evento.target.files[ 0 ];
+    if ( ! arquivo ) return;
+    const leitor = new FileReader ( );
+    leitor.onload = ( ) => {
+        try {
+            const dados = JSON.parse ( leitor.result );
+            if ( ! dados.colunas ) throw new Error ( 'formato inválido' );
+            quadro = dados;
+            persistir ( );
+            document.getElementById ( 'quadroTitulo' ).value = quadro.titulo || 'Quadro de Orçamentos';
+            renderBoard ( );
+            toast ( 'Dados importados com sucesso', 'sucesso' );
+        } catch ( e ) {
+            toast ( 'Arquivo inválido', 'perigo' );
         }
+    };
+    leitor.readAsText ( arquivo );
+    evento.target.value = '';
+}
 
+/* ---------- start ---------- */
 
+renderBoard ( );
 
-        function excluirNota ( ) {
-
-            notas = notas.filter ( nota => nota.id != notaAtual );
-
-            notaAtual = null;
-
-            salvarLocal ( );
-
-            limparEditor ( );
-
-            renderizarNotas ( );
-
-            toast ( 'Nota excluída com sucesso', 'perigo' );
-
-        }
-
-
-
-        function confirmarExcluirTudo ( ) {
-
-            if ( notas.length == 0 ) {
-
-                toast ( 'Você ainda não tem notas para excluir', 'info' );
-
-                return;
-
-            }
-
-            abrirModal (
-
-                'Excluir todas as notas?',
-
-                'Todas as suas anotações serão apagadas definitivamente.',
-
-                function ( ) {
-
-                    excluirTudo ( );
-
-                }
-
-            );
-
-        }
-
-
-
-        function excluirTudo ( ) {
-
-            notas = [ ];
-
-            notaAtual = null;
-
-            salvarLocal ( );
-
-            limparEditor ( );
-
-            renderizarNotas ( );
-
-            toast ( 'Todas as notas foram excluídas', 'perigo' );
-
-        }
-
-
-
-        function textoLimpo ( html ) {
-
-            let div = document.createElement ( 'div' );
-
-            div.innerHTML = html;
-
-            return div.textContent || div.innerText || '';
-
-        }
-
-
-
-        function renderizarNotas ( ) {
-
-            let busca = document.getElementById ( 'buscar' ).value.toLowerCase ( );
-
-            let ordem = document.getElementById ( 'ordenar' ).value;
-
-            let lista = [ ...notas ];
-
-            lista = lista.filter ( nota => {
-
-                let titulo = ( nota.titulo || '' ).toLowerCase ( );
-
-                let conteudo = textoLimpo ( nota.conteudo || '' ).toLowerCase ( );
-
-                return titulo.includes ( busca ) || conteudo.includes ( busca );
-
-            } );
-
-            lista.sort ( ( a, b ) => {
-
-                let dataA = new Date ( a.atualizadaEm || a.data || a.criadaEm || 0 );
-
-                let dataB = new Date ( b.atualizadaEm || b.data || b.criadaEm || 0 );
-
-                if ( ordem == 'recente' ) {
-
-                    return dataB - dataA;
-
-                }
-
-                if ( ordem == 'antiga' ) {
-
-                    return dataA - dataB;
-
-                }
-
-                if ( ordem == 'az' ) {
-
-                    return ( a.titulo || '' ).localeCompare ( b.titulo || '' );
-
-                }
-
-                if ( ordem == 'za' ) {
-
-                    return ( b.titulo || '' ).localeCompare ( a.titulo || '' );
-
-                }
-
-                return 0;
-
-            } );
-
-            document.getElementById ( 'contadorNotas' ).innerText = lista.length == 1 ? '1 nota encontrada' : lista.length + ' notas encontradas';
-
-            let html = '';
-
-            if ( lista.length == 0 ) {
-
-                html = '<div class="vazio">Nenhuma nota encontrada</div>';
-
-            }
-
-            lista.forEach ( nota => {
-
-                let ativo = nota.id == notaAtual ? 'ativa' : '';
-
-                let dataBase = nota.atualizadaEm || nota.data || nota.criadaEm;
-
-                let data = dataBase ? new Date ( dataBase ).toLocaleString ( 'pt-BR' ) : '';
-
-                let resumo = textoLimpo ( nota.conteudo || '' ).slice ( 0, 110 );
-
-                html += `
-
-                    <div class="nota ${ ativo }" onclick="editarNota ( ${ nota.id } )">
-
-                        <div class="nota-topo">
-
-                            <div class="nota-titulo">${ nota.titulo }</div>
-
-                            <div class="nota-badge">nota</div>
-
-                        </div>
-
-                        <div class="nota-data">${ data }</div>
-
-                        <div class="nota-resumo">${ resumo || 'Sem conteúdo ainda...' }</div>
-
-                    </div>
-
-                `;
-
-            } );
-
-            document.getElementById ( 'listaNotas' ).innerHTML = html;
-
-        }
-
-
-
-        renderizarNotas ( );
-
-    </script>
-
+</script>
 </body>
 </html>
