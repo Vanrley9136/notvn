@@ -3,39 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quadro de Orçamentos</title>
+<title>Quadro de Tarefas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg: #f2f3f5;
+        --roxo-1: #7b61e0;
+        --roxo-2: #5b3fc4;
+        --roxo-escuro: #4a2fb0;
+        --roxo-tint: #f4f1fd;
+        --bg: #f6f5fa;
         --surface: #ffffff;
-        --surface-2: #f7f8fa;
-        --border: #e6e7eb;
-        --border-soft: #eef0f3;
-        --ink: #1d1d1f;
-        --ink-dim: #6e6e73;
-        --ink-faint: #a1a1a6;
-        --blue: #0071e3;
-        --blue-dim: rgba(0, 113, 227, 0.09);
-        --green: #2ea043;
-        --green-dim: rgba(46, 160, 67, 0.1);
-        --red: #ff3b30;
-        --red-dim: rgba(255, 59, 48, 0.09);
+        --surface-2: #f6f5fa;
+        --border: #ebe9f2;
+        --border-soft: #f1eff8;
+        --ink: #201c3a;
+        --ink-dim: #837f9c;
+        --ink-faint: #b3affc70;
+        --azul: #4f7cff;
+        --azul-dim: rgba(79, 124, 255, 0.1);
+        --verde: #22b573;
+        --verde-dim: rgba(34, 181, 115, 0.1);
+        --rosa: #f76e93;
+        --rosa-dim: rgba(247, 110, 147, 0.1);
         --radius-lg: 18px;
         --radius-md: 12px;
-        --radius-sm: 8px;
-        --shadow-1: 0 1px 2px rgba(20, 20, 25, 0.05), 0 1px 1px rgba(20,20,25,.03);
-        --shadow-2: 0 10px 30px rgba(20, 20, 25, 0.10), 0 2px 8px rgba(20,20,25,.05);
-        --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+        --sombra-1: 0 1px 2px rgba(32, 28, 58, 0.04), 0 1px 1px rgba(32,28,58,.03);
+        --sombra-2: 0 16px 40px rgba(32, 28, 58, 0.14), 0 4px 10px rgba(32,28,58,.06);
+        --font-title: 'Plus Jakarta Sans', sans-serif;
+        --font-body: 'Inter', sans-serif;
     }
 
     * { box-sizing: border-box; }
 
     body {
         margin: 0;
-        font-family: var(--font);
+        font-family: var(--font-body);
         background: var(--bg);
         color: var(--ink);
         height: 100vh;
@@ -43,36 +47,81 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    .app { display: flex; flex-direction: column; height: 100vh; }
+    .app { display: flex; height: 100vh; }
 
-    /* ---------- topbar ---------- */
+    /* ---------- sidebar ---------- */
+
+    .sidebar {
+        width: 72px;
+        flex-shrink: 0;
+        background: linear-gradient(195deg, var(--roxo-1), var(--roxo-escuro));
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 18px 0;
+        gap: 6px;
+    }
+
+    .sidebar-logo {
+        width: 40px; height: 40px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.16);
+        display: grid; place-items: center;
+        color: white;
+        font-family: var(--font-title);
+        font-weight: 800;
+        font-size: 16px;
+        margin-bottom: 22px;
+        flex-shrink: 0;
+    }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+    .sidebar-btn {
+        width: 42px; height: 42px;
+        border-radius: 12px;
+        background: transparent;
+        border: none;
+        color: rgba(255,255,255,0.62);
+        display: grid; place-items: center;
+        cursor: pointer;
+        transition: background .15s ease, color .15s ease;
+    }
+
+    .sidebar-btn:hover { background: rgba(255,255,255,0.12); color: white; }
+    .sidebar-btn.ativo { background: rgba(255,255,255,0.22); color: white; }
+
+    .sidebar-avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.9);
+        color: var(--roxo-2);
+        display: grid; place-items: center;
+        font-family: var(--font-title);
+        font-weight: 800;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+
+    /* ---------- conteudo ---------- */
+
+    .conteudo { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
     .topbar {
         display: flex;
         align-items: center;
         gap: 16px;
-        padding: 14px 22px;
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: saturate(180%) blur(16px);
+        padding: 16px 26px;
+        background: var(--surface);
         border-bottom: 1px solid var(--border);
         flex-shrink: 0;
     }
 
-    .marca { display: flex; align-items: center; gap: 10px; min-width: 0; }
-
-    .marca-icone {
-        width: 34px; height: 34px;
-        border-radius: 9px;
-        background: linear-gradient(135deg, #0071e3, #34c0ff);
-        display: grid; place-items: center;
-        color: white; font-weight: 800; font-size: 15px;
-        flex-shrink: 0;
-    }
-
     .quadro-titulo {
-        font-size: 17px;
-        font-weight: 700;
-        letter-spacing: -0.2px;
+        font-family: var(--font-title);
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
         border: none;
         outline: none;
         background: transparent;
@@ -85,479 +134,300 @@
 
     .quadro-titulo:hover, .quadro-titulo:focus { background: var(--surface-2); }
 
-    .quadro-sub {
-        font-size: 11.5px;
-        color: var(--ink-faint);
-        padding-left: 8px;
-    }
-
     .topbar-meio { flex: 1; display: flex; justify-content: center; min-width: 0; }
 
-    .busca {
-        position: relative;
-        width: 100%;
-        max-width: 360px;
-    }
+    .busca { position: relative; width: 100%; max-width: 360px; }
 
     .busca input {
         width: 100%;
-        padding: 8px 12px 8px 32px;
+        padding: 9px 12px 9px 34px;
         border-radius: 980px;
         border: 1px solid var(--border);
         background: var(--surface-2);
-        font-family: var(--font);
+        font-family: var(--font-body);
         font-size: 13px;
         outline: none;
         color: var(--ink);
     }
 
-    .busca input:focus { background: var(--surface); border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-dim); }
+    .busca input:focus { background: var(--surface); border-color: var(--azul); box-shadow: 0 0 0 4px var(--azul-dim); }
 
-    .busca svg {
-        position: absolute;
-        left: 11px; top: 50%;
-        transform: translateY(-50%);
-        color: var(--ink-faint);
-        pointer-events: none;
-    }
+    .busca svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--ink-dim); pointer-events: none; }
 
     .topbar-direita { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-    button {
-        font-family: var(--font);
-        cursor: pointer;
-        border: none;
-        outline: none;
-    }
+    button { font-family: var(--font-body); cursor: pointer; border: none; outline: none; }
 
     .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 14px;
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 9px 15px;
         border-radius: 980px;
-        font-size: 13px;
-        font-weight: 600;
-        background: var(--surface-2);
-        color: var(--ink);
+        font-size: 13px; font-weight: 600;
+        background: var(--surface-2); color: var(--ink);
         border: 1px solid var(--border);
         transition: background .15s ease, transform .1s ease, border-color .15s ease;
         white-space: nowrap;
     }
 
-    .btn:hover { background: #ececef; }
+    .btn:hover { background: #ececf5; }
     .btn:active { transform: scale(0.97); }
 
-    .btn-primario { background: var(--blue); color: white; border-color: var(--blue); }
-    .btn-primario:hover { background: #0077ed; }
+    .btn-primario { background: var(--roxo-2); color: white; border-color: var(--roxo-2); }
+    .btn-primario:hover { background: var(--roxo-1); }
 
-    .btn-perigo { color: var(--red); }
-    .btn-perigo:hover { background: var(--red-dim); border-color: rgba(255,59,48,.3); }
+    .btn-perigo { color: var(--rosa); }
+    .btn-perigo:hover { background: var(--rosa-dim); border-color: rgba(247,110,147,.3); }
 
     .btn-icone {
-        width: 34px; height: 34px;
-        border-radius: 50%;
+        width: 36px; height: 36px; border-radius: 50%;
         display: grid; place-items: center;
-        background: var(--surface-2);
-        border: 1px solid var(--border);
-        color: var(--ink-dim);
-        padding: 0;
+        background: var(--surface-2); border: 1px solid var(--border);
+        color: var(--ink-dim); padding: 0;
     }
 
-    .btn-icone:hover { background: #ececef; color: var(--ink); }
+    .btn-icone:hover { background: #ececf5; color: var(--ink); }
 
     .menu-wrap { position: relative; }
 
     .menu-drop {
-        position: absolute;
-        top: calc(100% + 8px);
-        right: 0;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-2);
-        padding: 6px;
-        min-width: 190px;
-        display: none;
-        z-index: 500;
+        position: absolute; top: calc(100% + 8px); right: 0;
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius-md); box-shadow: var(--sombra-2);
+        padding: 6px; min-width: 210px; display: none; z-index: 500;
     }
 
     .menu-drop.aberto { display: block; }
 
     .menu-item {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        width: 100%;
-        text-align: left;
-        padding: 9px 10px;
-        border-radius: 8px;
-        background: transparent;
-        color: var(--ink);
-        font-size: 13px;
-        font-weight: 500;
+        display: flex; align-items: center; gap: 9px; width: 100%;
+        text-align: left; padding: 9px 10px; border-radius: 8px;
+        background: transparent; color: var(--ink); font-size: 13px; font-weight: 500;
     }
 
     .menu-item:hover { background: var(--surface-2); }
-    .menu-item.perigo { color: var(--red); }
-    .menu-item.perigo:hover { background: var(--red-dim); }
+    .menu-item.perigo { color: var(--rosa); }
+    .menu-item.perigo:hover { background: var(--rosa-dim); }
 
     /* ---------- board ---------- */
 
-    .board-wrap { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; padding: 18px 22px; }
+    .board-wrap { flex: 1; min-height: 0; overflow-x: auto; overflow-y: hidden; padding: 20px 26px; }
 
-    .board {
-        display: flex;
-        align-items: flex-start;
-        gap: 14px;
-        height: 100%;
-        width: max-content;
-        min-width: 100%;
-    }
+    .board { display: flex; align-items: flex-start; gap: 16px; height: 100%; width: max-content; min-width: 100%; }
 
     .coluna {
-        width: 302px;
-        flex-shrink: 0;
-        background: var(--surface);
+        width: 296px; flex-shrink: 0;
+        background: var(--surface-2);
         border-radius: var(--radius-lg);
         border: 1px solid var(--border);
-        box-shadow: var(--shadow-1);
-        display: flex;
-        flex-direction: column;
+        display: flex; flex-direction: column;
         max-height: 100%;
     }
 
     .coluna.arrastando-col { opacity: 0.4; }
 
-    .coluna-cabecalho {
-        padding: 14px 14px 10px;
-        border-top-left-radius: var(--radius-lg);
-        border-top-right-radius: var(--radius-lg);
-        border-top: 3px solid var(--cor, var(--blue));
-        cursor: grab;
-        flex-shrink: 0;
-    }
-
+    .coluna-cabecalho { padding: 14px 14px 8px; cursor: grab; flex-shrink: 0; }
     .coluna-cabecalho:active { cursor: grabbing; }
 
-    .coluna-topo-linha {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 6px;
-    }
-
+    .coluna-topo-linha { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
     .coluna-titulo-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
-
-    .coluna-ponto {
-        width: 9px; height: 9px;
-        border-radius: 50%;
-        background: var(--cor, var(--blue));
-        flex-shrink: 0;
-    }
+    .coluna-ponto { width: 9px; height: 9px; border-radius: 50%; background: var(--cor, var(--azul)); flex-shrink: 0; }
 
     .coluna-titulo {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--ink);
-        border: none;
-        outline: none;
-        background: transparent;
-        font-family: var(--font);
-        padding: 2px 4px;
-        border-radius: 6px;
-        min-width: 20px;
-        max-width: 170px;
+        font-family: var(--font-title);
+        font-size: 14px; font-weight: 700; color: var(--ink);
+        border: none; outline: none; background: transparent;
+        padding: 2px 4px; border-radius: 6px; min-width: 20px; max-width: 170px;
     }
 
-    .coluna-titulo:hover, .coluna-titulo:focus { background: var(--surface-2); }
+    .coluna-titulo:hover, .coluna-titulo:focus { background: var(--surface); }
 
     .coluna-acoes-btn {
-        width: 26px; height: 26px;
-        border-radius: 50%;
-        background: transparent;
-        color: var(--ink-faint);
-        display: grid; place-items: center;
-        flex-shrink: 0;
+        width: 26px; height: 26px; border-radius: 50%;
+        background: transparent; color: var(--ink-dim);
+        display: grid; place-items: center; flex-shrink: 0;
     }
 
-    .coluna-acoes-btn:hover { background: var(--surface-2); color: var(--ink); }
+    .coluna-acoes-btn:hover { background: var(--surface); color: var(--ink); }
 
-    .coluna-stats {
-        margin-top: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 11px;
-        color: var(--ink-faint);
-        font-weight: 500;
-        padding-left: 17px;
-    }
+    .coluna-stats { margin-top: 6px; font-size: 11.5px; color: var(--ink-dim); font-weight: 600; padding-left: 17px; }
 
-    .coluna-stats .valor-total { font-weight: 700; color: var(--ink-dim); }
-
-    .coluna-corpo {
-        flex: 1;
-        overflow-y: auto;
-        padding: 4px 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        min-height: 40px;
-    }
-
+    .coluna-corpo { flex: 1; overflow-y: auto; padding: 4px 10px; display: flex; flex-direction: column; gap: 9px; min-height: 40px; }
     .coluna-corpo::-webkit-scrollbar { width: 6px; }
-    .coluna-corpo::-webkit-scrollbar-thumb { background: #d9dbe0; border-radius: 20px; }
-
-    .coluna-corpo.arrasto-sobre { background: var(--blue-dim); border-radius: 10px; }
+    .coluna-corpo::-webkit-scrollbar-thumb { background: #d9d6e8; border-radius: 20px; }
+    .coluna-corpo.arrasto-sobre { background: var(--roxo-tint); border-radius: 10px; }
 
     .coluna-rodape { padding: 8px 10px 12px; flex-shrink: 0; }
 
     .btn-add-cartao {
-        width: 100%;
-        text-align: left;
-        padding: 8px 10px;
-        border-radius: 10px;
-        background: transparent;
-        color: var(--ink-dim);
-        font-size: 13px;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        width: 100%; text-align: left; padding: 8px 10px; border-radius: 10px;
+        background: transparent; color: var(--ink-dim); font-size: 13px; font-weight: 600;
+        display: flex; align-items: center; gap: 6px;
     }
 
-    .btn-add-cartao:hover { background: var(--surface-2); color: var(--ink); }
+    .btn-add-cartao:hover { background: var(--surface); color: var(--ink); }
 
     /* ---------- cartao ---------- */
 
     .cartao {
         background: var(--surface);
         border: 1px solid var(--border-soft);
+        border-left: 3px solid var(--cor-cartao, var(--border));
         border-radius: var(--radius-md);
-        padding: 11px 12px;
-        box-shadow: var(--shadow-1);
+        padding: 12px 13px;
+        box-shadow: var(--sombra-1);
         cursor: grab;
         transition: box-shadow .15s ease, transform .1s ease;
     }
 
-    .cartao:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); }
+    .cartao:hover { box-shadow: var(--sombra-2); transform: translateY(-1px); }
     .cartao:active { cursor: grabbing; }
     .cartao.arrastando { opacity: 0.35; }
     .cartao.oculto-filtro { display: none; }
 
-    .cartao-topo {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 8px;
-        margin-bottom: 6px;
+    .cartao-topo { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+
+    .cartao-titulo {
+        font-family: var(--font-title);
+        font-size: 13.5px; font-weight: 700; color: var(--ink);
+        line-height: 1.35;
+        word-break: break-word;
     }
 
-    .cartao-id {
-        font-size: 12.5px;
-        font-weight: 700;
-        color: var(--ink);
+    .cartao-pill {
+        font-size: 9.5px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
+        padding: 2px 8px; border-radius: 999px; color: white;
+        white-space: nowrap; flex-shrink: 0;
     }
 
-    .cartao-valor {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--green);
-        background: var(--green-dim);
-        padding: 2px 7px;
-        border-radius: 6px;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
-    .cartao-linha {
-        font-size: 12px;
-        color: var(--ink-dim);
-        margin-top: 2px;
-        display: flex;
-        gap: 4px;
-        line-height: 1.4;
-    }
-
+    .cartao-linha { font-size: 12px; color: var(--ink-dim); margin-top: 6px; line-height: 1.45; }
     .cartao-linha b { color: var(--ink); font-weight: 600; }
+    .cartao-linha.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-    .cartao-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        margin-top: 9px;
+    .cartao-barra-wrap { margin-top: 9px; }
+    .cartao-barra-legenda { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink-dim); font-weight: 600; margin-bottom: 4px; }
+    .cartao-barra-fundo { height: 5px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+    .cartao-barra-preenchida { height: 100%; border-radius: 999px; background: var(--verde); }
+
+    .cartao-rodape {
+        margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-soft);
+        font-size: 10.5px; color: var(--ink-faint); display: flex; align-items: center; gap: 4px;
     }
 
-    .tag-chip {
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        padding: 2px 7px;
-        border-radius: 6px;
-        background: var(--surface-2);
-        color: var(--ink-dim);
-        border: 1px solid var(--border);
-    }
-
-    /* ---------- coluna nova (placeholder) ---------- */
+    /* ---------- coluna nova ---------- */
 
     .coluna-nova {
-        width: 260px;
-        flex-shrink: 0;
+        width: 260px; flex-shrink: 0;
         border: 1.5px dashed var(--border);
         border-radius: var(--radius-lg);
-        background: transparent;
-        color: var(--ink-faint);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: 13.5px;
-        font-weight: 600;
-        min-height: 64px;
-        align-self: flex-start;
+        background: transparent; color: var(--ink-dim);
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        font-size: 13.5px; font-weight: 700;
+        min-height: 64px; align-self: flex-start;
+        font-family: var(--font-title);
     }
 
-    .coluna-nova:hover { background: rgba(255,255,255,0.6); color: var(--ink-dim); border-color: var(--ink-faint); }
+    .coluna-nova:hover { background: var(--surface); border-color: var(--ink-faint); }
 
     /* ---------- modais ---------- */
 
     .overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(20, 20, 25, 0.35);
-        backdrop-filter: blur(3px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 18px;
-        z-index: 9998;
+        position: fixed; inset: 0; background: rgba(32, 28, 58, 0.35); backdrop-filter: blur(3px);
+        display: none; align-items: center; justify-content: center; padding: 18px; z-index: 9998;
     }
 
     .overlay.ativo { display: flex; }
 
     .modal {
-        width: 100%;
-        max-width: 440px;
-        background: var(--surface);
-        border-radius: 20px;
-        box-shadow: var(--shadow-2);
-        padding: 22px;
-        animation: entrar .18s ease;
-        max-height: 88vh;
-        overflow-y: auto;
+        width: 100%; max-width: 460px; background: var(--surface);
+        border-radius: 20px; box-shadow: var(--sombra-2); padding: 22px;
+        animation: entrar .18s ease; max-height: 88vh; overflow-y: auto;
     }
 
+    .modal.largo { max-width: 560px; }
     .modal.pequeno { max-width: 340px; }
 
     @keyframes entrar { from { opacity:0; transform: scale(.97) translateY(6px);} to {opacity:1; transform:scale(1) translateY(0);} }
 
-    .modal h3 {
-        margin: 0 0 4px;
-        font-size: 18px;
-        font-weight: 700;
-        letter-spacing: -0.2px;
-    }
-
+    .modal h3 { margin: 0 0 4px; font-family: var(--font-title); font-size: 18px; font-weight: 800; letter-spacing: -0.2px; }
     .modal .modal-sub { margin: 0 0 18px; font-size: 12.5px; color: var(--ink-faint); }
 
     .campo { margin-bottom: 14px; }
 
     .campo label {
-        display: block;
-        font-size: 11.5px;
-        font-weight: 600;
-        color: var(--ink-dim);
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
+        display: block; font-size: 11.5px; font-weight: 700; color: var(--ink-dim);
+        margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em;
     }
 
-    .campo input, .campo textarea {
-        width: 100%;
-        padding: 9px 11px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: var(--surface-2);
-        font-family: var(--font);
-        font-size: 13.5px;
-        color: var(--ink);
-        outline: none;
-        resize: vertical;
+    .campo input, .campo textarea, .campo select {
+        width: 100%; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--border);
+        background: var(--surface-2); font-family: var(--font-body); font-size: 13.5px;
+        color: var(--ink); outline: none; resize: vertical;
     }
 
-    .campo input:focus, .campo textarea:focus { background: var(--surface); border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-dim); }
-
-    .campo-linha2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .paleta { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .cor-op {
-        width: 30px; height: 30px;
-        border-radius: 50%;
-        border: 2px solid transparent;
-        cursor: pointer;
-        display: grid;
-        place-items: center;
-        color: white;
-        font-size: 12px;
+    .campo input:focus, .campo textarea:focus, .campo select:focus {
+        background: var(--surface); border-color: var(--azul); box-shadow: 0 0 0 4px var(--azul-dim);
     }
 
-    .cor-op.selecionada { border-color: var(--ink); }
-
-    .modal-botoes {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 8px;
-        margin-top: 18px;
-    }
-
+    .modal-botoes { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 18px; }
     .modal-botoes .lado { display: flex; gap: 8px; }
 
     .icone-alerta {
-        width: 42px; height: 42px;
-        border-radius: 12px;
-        background: var(--red-dim);
-        color: var(--red);
-        display: grid; place-items: center;
-        font-weight: 800;
-        font-size: 19px;
-        margin-bottom: 12px;
+        width: 42px; height: 42px; border-radius: 12px; background: var(--rosa-dim); color: var(--rosa);
+        display: grid; place-items: center; font-weight: 800; font-size: 19px; margin-bottom: 12px;
     }
+
+    /* ---------- historico ---------- */
+
+    .historico-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 4px; }
+    .historico-meta { font-size: 11.5px; color: var(--ink-dim); margin-bottom: 8px; }
+    .historico-meta b { color: var(--ink); }
+    .historico-lista { display: grid; gap: 6px; max-height: 130px; overflow-y: auto; }
+    .historico-item { font-size: 11.5px; color: var(--ink-dim); display: flex; gap: 8px; }
+    .historico-item .ponto { width: 5px; height: 5px; border-radius: 50%; background: var(--roxo-2); margin-top: 6px; flex-shrink: 0; }
+    .historico-item b { color: var(--ink); font-weight: 600; }
+
+    /* ---------- configuracao de campos ---------- */
+
+    .config-linha { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; }
+    .cfg-topo { display: flex; gap: 8px; align-items: center; }
+    .cfg-rotulo { flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-family: var(--font-body); font-size: 13px; outline: none; }
+    .cfg-rotulo:focus { border-color: var(--azul); }
+    .cfg-tipo { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-family: var(--font-body); font-size: 12.5px; outline: none; }
+    .cfg-remover { width: 30px; height: 30px; border-radius: 8px; background: transparent; color: var(--ink-faint); display: grid; place-items: center; flex-shrink: 0; }
+    .cfg-remover:hover { background: var(--rosa-dim); color: var(--rosa); }
+
+    .cfg-check { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--ink-dim); font-weight: 600; margin-top: 10px; cursor: pointer; }
+    .cfg-check input { cursor: pointer; }
+
+    .cfg-opcoes-lista { display: grid; gap: 6px; margin-top: 8px; }
+    .cfg-opcao { display: flex; align-items: center; gap: 6px; }
+    .cfg-opcao input[type="color"] { width: 28px; height: 28px; border: 1px solid var(--border); border-radius: 7px; padding: 2px; background: var(--surface); flex-shrink: 0; }
+    .cfg-opcao input[type="text"] { flex: 1; padding: 6px 9px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); font-size: 12.5px; font-family: var(--font-body); outline: none; }
+    .cfg-opcao button { width: 26px; height: 26px; border-radius: 7px; background: transparent; color: var(--ink-faint); flex-shrink: 0; }
+    .cfg-opcao button:hover { background: var(--rosa-dim); color: var(--rosa); }
+
+    .btn-mini { margin-top: 8px; font-size: 11.5px; font-weight: 700; color: var(--roxo-2); background: transparent; padding: 5px 8px; border-radius: 7px; }
+    .btn-mini:hover { background: var(--roxo-tint); }
+
+    .btn-add-campo { width: 100%; padding: 11px; border-radius: 12px; border: 1.5px dashed var(--border); background: transparent; color: var(--ink-dim); font-size: 13px; font-weight: 700; margin-top: 4px; }
+    .btn-add-campo:hover { background: var(--surface-2); color: var(--roxo-2); border-color: var(--roxo-2); }
 
     /* ---------- toasts ---------- */
 
-    .toast-area {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        display: grid;
-        gap: 8px;
-        z-index: 99999;
-    }
+    .toast-area { position: fixed; right: 20px; bottom: 20px; display: grid; gap: 8px; z-index: 99999; }
 
     .toast {
-        min-width: 230px;
-        background: var(--ink);
-        color: white;
-        border-radius: 12px;
-        padding: 11px 14px;
-        font-size: 13px;
-        font-weight: 500;
-        box-shadow: var(--shadow-2);
-        animation: subir .2s ease;
+        min-width: 230px; background: var(--ink); color: white; border-radius: 12px; padding: 11px 14px;
+        font-size: 13px; font-weight: 500; box-shadow: var(--sombra-2); animation: subir .2s ease;
     }
 
-    .toast.sucesso { background: #1f8b3b; }
-    .toast.perigo { background: #d92f27; }
+    .toast.sucesso { background: var(--verde); }
+    .toast.perigo { background: var(--rosa); }
 
     @keyframes subir { from {opacity:0; transform: translateY(8px);} to {opacity:1; transform:translateY(0);} }
 
     @media (max-width: 700px) {
         .topbar-meio { display: none; }
-        .coluna-stats .valor-total { display: none; }
     }
 </style>
 </head>
@@ -565,85 +435,69 @@
 
 <div class="app">
 
-    <div class="topbar">
-        <div class="marca">
-            <div class="marca-icone">K</div>
-            <div>
-                <input type="text" id="quadroTitulo" class="quadro-titulo" value="Quadro de Orçamentos">
-            </div>
+    <div class="sidebar">
+        <div class="sidebar-logo">K</div>
+        <div class="sidebar-nav">
+            <button class="sidebar-btn ativo" title="Quadro">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16M15 4v16"/></svg>
+            </button>
+            <button class="sidebar-btn" title="Buscar" onclick="document.getElementById('busca').focus()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            </button>
+            <button class="sidebar-btn" title="Configurar campos" onclick="abrirConfigCampos()">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+            </button>
         </div>
-
-        <div class="topbar-meio">
-            <div class="busca">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                <input type="text" id="busca" placeholder="Buscar por orçamento, paciente ou tag..." oninput="filtrarCartoes()">
-            </div>
-        </div>
-
-        <div class="topbar-direita">
-            <button class="btn" onclick="abrirModalColuna(null)">+ Coluna</button>
-            <div class="menu-wrap">
-                <button class="btn-icone" onclick="alternarMenu(event)" title="Mais opções">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-                </button>
-                <div class="menu-drop" id="menuDrop">
-                    <button class="menu-item" onclick="exportarJSON()">⬇️ Exportar dados (JSON)</button>
-                    <button class="menu-item" onclick="document.getElementById('inputImportar').click()">⬆️ Importar dados (JSON)</button>
-                    <button class="menu-item perigo" onclick="confirmarReiniciar()">↺ Reiniciar quadro</button>
-                </div>
-            </div>
-            <input type="file" id="inputImportar" accept="application/json" style="display:none" onchange="importarJSON(event)">
-        </div>
+        <div class="sidebar-avatar">VA</div>
     </div>
 
-    <div class="board-wrap">
-        <div class="board" id="board"></div>
+    <div class="conteudo">
+
+        <div class="topbar">
+            <input type="text" id="quadroTitulo" class="quadro-titulo" value="Quadro de Tarefas">
+
+            <div class="topbar-meio">
+                <div class="busca">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="busca" placeholder="Buscar tarefas..." oninput="filtrarCartoes()">
+                </div>
+            </div>
+
+            <div class="topbar-direita">
+                <button class="btn" onclick="abrirConfigCampos()">⚙️ Campos</button>
+                <button class="btn" onclick="abrirModalColuna(null)">+ Coluna</button>
+                <div class="menu-wrap">
+                    <button class="btn-icone" onclick="alternarMenu(event)" title="Mais opções">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+                    </button>
+                    <div class="menu-drop" id="menuDrop">
+                        <button class="menu-item" onclick="exportarJSON()">⬇️ Exportar dados (JSON)</button>
+                        <button class="menu-item" onclick="document.getElementById('inputImportar').click()">⬆️ Importar dados (JSON)</button>
+                        <button class="menu-item" onclick="abrirConfigCampos()">⚙️ Configurar campos</button>
+                        <button class="menu-item perigo" onclick="confirmarReiniciar()">↺ Reiniciar quadro</button>
+                    </div>
+                </div>
+                <input type="file" id="inputImportar" accept="application/json" style="display:none" onchange="importarJSON(event)">
+            </div>
+        </div>
+
+        <div class="board-wrap">
+            <div class="board" id="board"></div>
+        </div>
+
     </div>
 
 </div>
 
-<!-- modal cartão -->
+<!-- modal cartão (gerado dinamicamente) -->
 <div class="overlay" id="overlayCartao">
     <div class="modal">
         <h3 id="cartaoModalTitulo">Novo cartão</h3>
-        <p class="modal-sub">Preencha os dados do orçamento / tarefa</p>
+        <p class="modal-sub">Preencha os campos configurados para esse cartão</p>
 
-        <div class="campo">
-            <label>Identificação (nº do orçamento/pedido)</label>
-            <input type="text" id="campoId" placeholder="Ex: 01000000015">
-        </div>
+        <div id="areaCamposCartao"></div>
 
-        <div class="campo-linha2">
-            <div class="campo">
-                <label>Paciente / cliente</label>
-                <input type="text" id="campoPaciente" placeholder="Nome do paciente">
-            </div>
-            <div class="campo">
-                <label>Telefone</label>
-                <input type="text" id="campoTelefone" placeholder="(00) 00000-0000">
-            </div>
-        </div>
-
-        <div class="campo-linha2">
-            <div class="campo">
-                <label>Convênio</label>
-                <input type="text" id="campoConvenio" placeholder="Particular, plano...">
-            </div>
-            <div class="campo">
-                <label>Valor (R$)</label>
-                <input type="text" id="campoValor" placeholder="0,00" inputmode="decimal">
-            </div>
-        </div>
-
-        <div class="campo">
-            <label>Responsável</label>
-            <input type="text" id="campoResponsavel" placeholder="Nome do responsável">
-        </div>
-
-        <div class="campo">
-            <label>Tags (separe por vírgula)</label>
-            <input type="text" id="campoTags" placeholder="TGP, TGO, LDL...">
-        </div>
+        <div id="areaHistoricoCartao"></div>
 
         <div class="modal-botoes">
             <div class="lado">
@@ -665,12 +519,12 @@
 
         <div class="campo">
             <label>Nome da coluna</label>
-            <input type="text" id="campoColunaNome" placeholder="Ex: Em negociação">
+            <input type="text" id="campoColunaNome" placeholder="Ex: Em andamento">
         </div>
 
         <div class="campo">
             <label>Cor</label>
-            <div class="paleta" id="paletaCores"></div>
+            <div class="paleta" id="paletaCores" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
         </div>
 
         <div class="modal-botoes">
@@ -685,6 +539,25 @@
     </div>
 </div>
 
+<!-- modal configuracao de campos -->
+<div class="overlay" id="overlayConfigCampos">
+    <div class="modal largo">
+        <h3>Configurar campos do cartão</h3>
+        <p class="modal-sub">Defina o que aparece no formulário ao criar ou editar um cartão — tipo um JSON de campos, do seu jeito.</p>
+
+        <div id="listaCamposConfig"></div>
+        <button class="btn-add-campo" onclick="adicionarCampoConfig()">+ Adicionar campo</button>
+
+        <div class="modal-botoes">
+            <div class="lado"></div>
+            <div class="lado">
+                <button class="btn" onclick="fecharOverlay('overlayConfigCampos')">Cancelar</button>
+                <button class="btn btn-primario" onclick="salvarConfigCampos()">Salvar configuração</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- modal confirmação genérica -->
 <div class="overlay" id="overlayConfirmar">
     <div class="modal pequeno">
@@ -693,7 +566,7 @@
         <p class="modal-sub" id="confirmarTexto" style="margin-bottom:6px;">Essa ação não poderá ser desfeita.</p>
         <div class="modal-botoes" style="justify-content:flex-end;">
             <button class="btn" onclick="fecharOverlay('overlayConfirmar')">Cancelar</button>
-            <button class="btn btn-primario" style="background:var(--red);border-color:var(--red)" id="btnConfirmarAcao">Confirmar</button>
+            <button class="btn btn-primario" style="background:var(--rosa);border-color:var(--rosa)" id="btnConfirmarAcao">Confirmar</button>
         </div>
     </div>
 </div>
@@ -705,76 +578,63 @@
 /* =========================================================================
    CAMADA DE DADOS
    Hoje os dados ficam no localStorage do navegador.
-   Quando integrar com PHP + banco de dados, troque apenas as funções
-   carregarQuadro() e salvarQuadro() abaixo por chamadas fetch(), por
-   exemplo:
-     async function carregarQuadro() {
-         const resp = await fetch('api/quadro.php?acao=carregar');
-         return await resp.json();
-     }
-     async function salvarQuadro(quadro) {
-         await fetch('api/quadro.php?acao=salvar', {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify(quadro)
-         });
-     }
-   O resto do código (renderização, drag and drop, modais) não depende
-   de onde os dados vêm, então não precisa mudar mais nada.
+   Quando integrar com PHP + banco de dados, troque só carregarQuadro() e
+   salvarQuadro() por chamadas fetch() para sua API — o resto do código
+   (formulário dinâmico, drag and drop, histórico) não muda.
    ========================================================================= */
 
-const CHAVE_LOCALSTORAGE = 'quadro_kanban_v1';
+const CHAVE_LOCALSTORAGE = 'quadro_kanban_v2';
 
-const CORES = [
-    { nome: 'Azul',    valor: '#0071e3' },
-    { nome: 'Laranja',  valor: '#ff9500' },
-    { nome: 'Verde',    valor: '#2ea043' },
-    { nome: 'Roxo',     valor: '#af52de' },
-    { nome: 'Vermelho', valor: '#ff3b30' },
-    { nome: 'Âmbar',    valor: '#ffcc00' },
-    { nome: 'Cinza',    valor: '#8e8e93' },
-    { nome: 'Ciano',    valor: '#00b8a9' }
+const CORES_COLUNA = [
+    '#7b61e0', '#4f7cff', '#22b573', '#f5a623', '#f76e93', '#00b8a9', '#8a8fa3', '#e0527f'
 ];
 
+const CORES_OPCAO = [ '#8a8fa3', '#4f7cff', '#22b573', '#f5a623', '#f76e93', '#7b61e0', '#00b8a9', '#e0527f' ];
+
 function quadroPadrao ( ) {
+    const agora = new Date ( ).toISOString ( );
+    const historicoInicial = [ { data: agora, evento: 'Cartão criado' } ];
+
     return {
-        titulo: 'Quadro de Orçamentos',
+        titulo: 'Quadro de Tarefas',
+        camposConfig: [
+            { id: gerarId ( ), chave: 'chamado', rotulo: 'Chamado', tipo: 'texto' },
+            { id: gerarId ( ), chave: 'descricao', rotulo: 'Descrição', tipo: 'textarea' },
+            {
+                id: gerarId ( ), chave: 'prioridade', rotulo: 'Prioridade', tipo: 'selecao',
+                opcoes: [
+                    { rotulo: 'Normal', cor: '#8a8fa3' },
+                    { rotulo: 'Atenção', cor: '#f5a623' },
+                    { rotulo: 'Urgente', cor: '#f76e93' },
+                    { rotulo: 'Concluído', cor: '#22b573' }
+                ],
+                usarComoCorDoCartao: true
+            },
+            { id: gerarId ( ), chave: 'progresso', rotulo: 'Progresso (%)', tipo: 'numero', usarComoBarra: true }
+        ],
         colunas: [
             {
-                id: 'c1', titulo: 'Novas oportunidades', cor: '#ff9500',
+                id: 'c1', titulo: 'A fazer', cor: '#7b61e0',
                 cartoes: [
-                    { id: gerarId(), identificacao: '01000000004', paciente: '01000003', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 30, responsavel: 'UNIWARE', tags: ['TGP','TGO'] },
-                    { id: gerarId(), identificacao: '01000000006', paciente: '01000003', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 46, responsavel: 'UNIWARE', tags: ['TGP','TGO','LDL'] }
+                    { id: gerarId ( ), dados: { chamado: '#1042', descricao: 'Corrigir contagem de operadores inativos no ug.js', prioridade: 'Atenção', progresso: 10 }, criadoEm: agora, atualizadoEm: agora, historico: historicoInicial }
                 ]
             },
             {
-                id: 'c2', titulo: 'Negociação', cor: '#00b8a9',
+                id: 'c2', titulo: 'Em andamento', cor: '#4f7cff',
                 cartoes: [
-                    { id: gerarId(), identificacao: '01000000009', paciente: '01000005', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 46, responsavel: 'UNIWARE', tags: ['LDL','HDL','TGP','TGO'] }
+                    { id: gerarId ( ), dados: { chamado: '#1038', descricao: 'Configurar EAS Build / Dev Client para o bug de cookie no WebView iOS', prioridade: 'Normal', progresso: 55 }, criadoEm: agora, atualizadoEm: agora, historico: historicoInicial }
                 ]
             },
             {
-                id: 'c3', titulo: 'Stand-by', cor: '#af52de',
+                id: 'c3', titulo: 'Aguardando', cor: '#f5a623',
                 cartoes: [
-                    { id: gerarId(), identificacao: '01000000010', paciente: '01000006', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 31, responsavel: 'UNIWARE', tags: ['TGP','LDL','HDL'] }
+                    { id: gerarId ( ), dados: { chamado: '#1029', descricao: 'Aguardando aprovação do layout do carrossel de banners', prioridade: 'Normal', progresso: 80 }, criadoEm: agora, atualizadoEm: agora, historico: historicoInicial }
                 ]
             },
             {
-                id: 'c4', titulo: 'Aguardando fechamento', cor: '#ffcc00',
+                id: 'c4', titulo: 'Concluído', cor: '#22b573',
                 cartoes: [
-                    { id: gerarId(), identificacao: '01000000008', paciente: '01000004', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 46, responsavel: 'UNIWARE', tags: ['TGP','TGO','LDL','HDL'] }
-                ]
-            },
-            {
-                id: 'c5', titulo: 'Ganhos', cor: '#2ea043',
-                cartoes: [
-                    { id: gerarId(), identificacao: '014131114', paciente: '01000002', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 383.5, responsavel: 'UNIWARE', tags: ['TGO','TGO','POT','O17'] }
-                ]
-            },
-            {
-                id: 'c6', titulo: 'Perdidos', cor: '#ff3b30',
-                cartoes: [
-                    { id: gerarId(), identificacao: '014131116', paciente: '01000007', telefone: '(43) 99123-4567', convenio: 'PARTICULAR', valor: 76, responsavel: 'UNIWARE', tags: ['HDL','HEM','TGP'] }
+                    { id: gerarId ( ), dados: { chamado: '#1015', descricao: 'Ajuste da tabela responsiva do CRM (meus-clientes)', prioridade: 'Concluído', progresso: 100 }, criadoEm: agora, atualizadoEm: agora, historico: historicoInicial }
                 ]
             }
         ]
@@ -785,14 +645,16 @@ function carregarQuadro ( ) {
     const bruto = localStorage.getItem ( CHAVE_LOCALSTORAGE );
     if ( ! bruto ) return quadroPadrao ( );
     try {
-        return JSON.parse ( bruto );
+        const dados = JSON.parse ( bruto );
+        if ( ! dados.camposConfig || ! dados.colunas ) return quadroPadrao ( );
+        return dados;
     } catch ( e ) {
         return quadroPadrao ( );
     }
 }
 
-function salvarQuadro ( quadro ) {
-    localStorage.setItem ( CHAVE_LOCALSTORAGE, JSON.stringify ( quadro ) );
+function salvarQuadro ( quadroAtual ) {
+    localStorage.setItem ( CHAVE_LOCALSTORAGE, JSON.stringify ( quadroAtual ) );
 }
 
 function gerarId ( ) {
@@ -803,21 +665,41 @@ function gerarId ( ) {
 
 let quadro = carregarQuadro ( );
 let colunaEditandoId = null;
-let cartaoEditando = null; // { colunaId, cartaoId } ou null se for criação
-let corSelecionada = CORES[0].valor;
+let cartaoEditando = null;
+let corSelecionadaColuna = CORES_COLUNA[0];
 let acaoConfirmada = null;
+let campoConfigTemp = [ ];
 
-document.getElementById ( 'quadroTitulo' ).value = quadro.titulo || 'Quadro de Orçamentos';
+document.getElementById ( 'quadroTitulo' ).value = quadro.titulo || 'Quadro de Tarefas';
 document.getElementById ( 'quadroTitulo' ).addEventListener ( 'input', function ( ) {
     quadro.titulo = this.value;
-    salvarQuadro ( quadro );
+    persistir ( );
 } );
 
 function persistir ( ) { salvarQuadro ( quadro ); }
 
-function formatarValor ( n ) {
-    n = Number ( n ) || 0;
-    return n.toLocaleString ( 'pt-BR', { style: 'currency', currency: 'BRL' } );
+function escapar ( texto ) {
+    const div = document.createElement ( 'div' );
+    div.innerText = texto == null ? '' : String ( texto );
+    return div.innerHTML;
+}
+
+function tempoRelativo ( iso ) {
+    if ( ! iso ) return '';
+    const diffMs = Date.now ( ) - new Date ( iso ).getTime ( );
+    const min = Math.floor ( diffMs / 60000 );
+    if ( min < 1 ) return 'agora mesmo';
+    if ( min < 60 ) return `há ${ min } min`;
+    const h = Math.floor ( min / 60 );
+    if ( h < 24 ) return `há ${ h }h`;
+    const d = Math.floor ( h / 24 );
+    if ( d < 7 ) return `há ${ d }d`;
+    return new Date ( iso ).toLocaleDateString ( 'pt-BR' );
+}
+
+function dataHoraCompleta ( iso ) {
+    if ( ! iso ) return '';
+    return new Date ( iso ).toLocaleString ( 'pt-BR' );
 }
 
 function toast ( msg, tipo = '' ) {
@@ -841,15 +723,22 @@ function alternarMenu ( e ) {
 }
 document.addEventListener ( 'click', ( ) => document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' ) );
 
-/* ---------- render ---------- */
+/* ---------- historico ---------- */
+
+function registrarHistorico ( cartao, evento ) {
+    const agora = new Date ( ).toISOString ( );
+    cartao.historico = cartao.historico || [ ];
+    cartao.historico.unshift ( { data: agora, evento } );
+    cartao.atualizadoEm = agora;
+}
+
+/* ---------- render do board ---------- */
 
 function renderBoard ( ) {
     const board = document.getElementById ( 'board' );
     board.innerHTML = '';
 
-    quadro.colunas.forEach ( coluna => {
-        board.appendChild ( criarElementoColuna ( coluna ) );
-    } );
+    quadro.colunas.forEach ( coluna => board.appendChild ( criarElementoColuna ( coluna ) ) );
 
     const novaColBtn = document.createElement ( 'button' );
     novaColBtn.className = 'coluna-nova';
@@ -862,12 +751,9 @@ function renderBoard ( ) {
 }
 
 function criarElementoColuna ( coluna ) {
-    const total = coluna.cartoes.reduce ( ( soma, c ) => soma + ( Number ( c.valor ) || 0 ), 0 );
-
     const el = document.createElement ( 'div' );
     el.className = 'coluna';
     el.dataset.id = coluna.id;
-    el.draggable = false;
 
     el.innerHTML = `
         <div class="coluna-cabecalho" style="--cor:${ coluna.cor }" draggable="true">
@@ -880,15 +766,10 @@ function criarElementoColuna ( coluna ) {
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                 </button>
             </div>
-            <div class="coluna-stats">
-                <span>${ coluna.cartoes.length } cartão${ coluna.cartoes.length == 1 ? '' : 'ões' }</span>
-                <span class="valor-total">${ formatarValor ( total ) }</span>
-            </div>
+            <div class="coluna-stats">${ coluna.cartoes.length } cartão${ coluna.cartoes.length == 1 ? '' : 'ões' }</div>
         </div>
         <div class="coluna-corpo" data-coluna-corpo="${ coluna.id }"></div>
-        <div class="coluna-rodape">
-            <button class="btn-add-cartao">+ Adicionar cartão</button>
-        </div>
+        <div class="coluna-rodape"><button class="btn-add-cartao">+ Adicionar cartão</button></div>
     `;
 
     const corpo = el.querySelector ( '.coluna-corpo' );
@@ -908,47 +789,100 @@ function criarElementoColuna ( coluna ) {
     return el;
 }
 
+function campoCorCartao ( cartao ) {
+    const campo = quadro.camposConfig.find ( c => c.tipo == 'selecao' && c.usarComoCorDoCartao );
+    if ( ! campo ) return null;
+    const valor = cartao.dados[ campo.chave ];
+    const opcao = ( campo.opcoes || [ ] ).find ( o => o.rotulo == valor );
+    return opcao ? opcao.cor : null;
+}
+
 function criarElementoCartao ( colunaId, cartao ) {
     const el = document.createElement ( 'div' );
     el.className = 'cartao';
     el.draggable = true;
     el.dataset.id = cartao.id;
-    el.dataset.colunaId = colunaId;
 
-    const tags = ( cartao.tags || [ ] ).map ( t => `<span class="tag-chip">${ escapar ( t ) }</span>` ).join ( '' );
+    const cor = campoCorCartao ( cartao );
+    if ( cor ) el.style.setProperty ( '--cor-cartao', cor );
 
-    el.innerHTML = `
-        <div class="cartao-topo">
-            <span class="cartao-id">${ escapar ( cartao.identificacao || 'Sem identificação' ) }</span>
-            <span class="cartao-valor">${ formatarValor ( cartao.valor ) }</span>
+    const campos = quadro.camposConfig;
+    let html = '';
+
+    campos.forEach ( ( campo, idx ) => {
+        const valor = cartao.dados[ campo.chave ];
+        if ( valor == null || valor === '' ) return;
+
+        if ( idx == 0 ) {
+            html += `<div class="cartao-titulo">${ escapar ( valor ) }</div>`;
+            return;
+        }
+
+        if ( campo.tipo == 'selecao' ) {
+            const opcao = ( campo.opcoes || [ ] ).find ( o => o.rotulo == valor );
+            const corPill = opcao ? opcao.cor : '#8a8fa3';
+            html += `<div style="margin-top:8px"><span class="cartao-pill" style="background:${ corPill }">${ escapar ( valor ) }</span></div>`;
+            return;
+        }
+
+        if ( campo.tipo == 'numero' && campo.usarComoBarra ) {
+            const pct = Math.max ( 0, Math.min ( 100, Number ( valor ) || 0 ) );
+            html += `
+                <div class="cartao-barra-wrap">
+                    <div class="cartao-barra-legenda"><span>${ escapar ( campo.rotulo ) }</span><span>${ pct }%</span></div>
+                    <div class="cartao-barra-fundo"><div class="cartao-barra-preenchida" style="width:${ pct }%"></div></div>
+                </div>
+            `;
+            return;
+        }
+
+        if ( campo.tipo == 'textarea' ) {
+            html += `<div class="cartao-linha clamp">${ escapar ( valor ) }</div>`;
+            return;
+        }
+
+        if ( campo.tipo == 'data' ) {
+            const dataFmt = new Date ( valor + 'T00:00:00' ).toLocaleDateString ( 'pt-BR' );
+            html += `<div class="cartao-linha"><b>${ escapar ( campo.rotulo ) }:</b> ${ dataFmt }</div>`;
+            return;
+        }
+
+        html += `<div class="cartao-linha"><b>${ escapar ( campo.rotulo ) }:</b> ${ escapar ( valor ) }</div>`;
+    } );
+
+    html += `
+        <div class="cartao-rodape" title="Criado em ${ dataHoraCompleta ( cartao.criadoEm ) }">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            atualizado ${ tempoRelativo ( cartao.atualizadoEm ) }
         </div>
-        ${ cartao.paciente ? `<div class="cartao-linha"><b>Paciente:</b> ${ escapar ( cartao.paciente ) }</div>` : '' }
-        ${ cartao.telefone ? `<div class="cartao-linha"><b>Tel:</b> ${ escapar ( cartao.telefone ) }</div>` : '' }
-        ${ cartao.convenio ? `<div class="cartao-linha"><b>Convênio:</b> ${ escapar ( cartao.convenio ) }</div>` : '' }
-        ${ cartao.responsavel ? `<div class="cartao-linha"><b>Resp.:</b> ${ escapar ( cartao.responsavel ) }</div>` : '' }
-        ${ tags ? `<div class="cartao-tags">${ tags }</div>` : '' }
     `;
+
+    el.innerHTML = html;
 
     el.addEventListener ( 'click', ( ) => abrirModalCartao ( colunaId, cartao.id ) );
 
     el.addEventListener ( 'dragstart', ( ) => {
         el.classList.add ( 'arrastando' );
+        el.dataset.colunaOrigem = el.closest ( '.coluna-corpo' ).dataset.colunaCorpo;
     } );
 
     el.addEventListener ( 'dragend', ( ) => {
         el.classList.remove ( 'arrastando' );
+        const colunaOrigemId = el.dataset.colunaOrigem;
         sincronizarOrdemCartoes ( );
-        atualizarEstatisticasColunas ( );
+
+        const novaColuna = quadro.colunas.find ( c => c.cartoes.some ( ct => ct.id == cartao.id ) );
+        if ( novaColuna && novaColuna.id != colunaOrigemId ) {
+            const cartaoMovido = novaColuna.cartoes.find ( ct => ct.id == cartao.id );
+            registrarHistorico ( cartaoMovido, `Movido para "${ novaColuna.titulo }"` );
+            toast ( 'Cartão movido — horário atualizado', 'sucesso' );
+        }
+
         persistir ( );
+        renderBoard ( );
     } );
 
     return el;
-}
-
-function escapar ( texto ) {
-    const div = document.createElement ( 'div' );
-    div.innerText = texto == null ? '' : String ( texto );
-    return div.innerHTML;
 }
 
 /* ---------- arrastar e soltar: cartões ---------- */
@@ -960,21 +894,12 @@ function ativarArrastarCartoes ( corpoEl ) {
         if ( ! arrastando ) return;
         corpoEl.classList.add ( 'arrasto-sobre' );
         const depois = elementoDepoisDoMouse ( corpoEl, e.clientY, '.cartao:not(.arrastando)' );
-        if ( depois == null ) {
-            corpoEl.appendChild ( arrastando );
-        } else {
-            corpoEl.insertBefore ( arrastando, depois );
-        }
+        if ( depois == null ) corpoEl.appendChild ( arrastando );
+        else corpoEl.insertBefore ( arrastando, depois );
     } );
 
-    corpoEl.addEventListener ( 'dragleave', e => {
-        if ( e.target === corpoEl ) corpoEl.classList.remove ( 'arrasto-sobre' );
-    } );
-
-    corpoEl.addEventListener ( 'drop', e => {
-        e.preventDefault ( );
-        corpoEl.classList.remove ( 'arrasto-sobre' );
-    } );
+    corpoEl.addEventListener ( 'dragleave', e => { if ( e.target === corpoEl ) corpoEl.classList.remove ( 'arrasto-sobre' ); } );
+    corpoEl.addEventListener ( 'drop', e => { e.preventDefault ( ); corpoEl.classList.remove ( 'arrasto-sobre' ); } );
 }
 
 function elementoDepoisDoMouse ( container, posicao, seletor ) {
@@ -982,38 +907,20 @@ function elementoDepoisDoMouse ( container, posicao, seletor ) {
     return itens.reduce ( ( maisProximo, item ) => {
         const box = item.getBoundingClientRect ( );
         const offset = posicao - box.top - box.height / 2;
-        if ( offset < 0 && offset > maisProximo.offset ) {
-            return { offset, elemento: item };
-        }
+        if ( offset < 0 && offset > maisProximo.offset ) return { offset, elemento: item };
         return maisProximo;
     }, { offset: Number.NEGATIVE_INFINITY, elemento: null } ).elemento;
 }
 
 function sincronizarOrdemCartoes ( ) {
+    const mapaCartoes = { };
+    quadro.colunas.forEach ( c => c.cartoes.forEach ( ct => mapaCartoes[ ct.id ] = ct ) );
+
     document.querySelectorAll ( '.coluna-corpo' ).forEach ( corpoEl => {
-        const colunaId = corpoEl.dataset.colunaCorpo;
-        const coluna = quadro.colunas.find ( c => c.id == colunaId );
+        const coluna = quadro.colunas.find ( c => c.id == corpoEl.dataset.colunaCorpo );
         if ( ! coluna ) return;
         const idsNaOrdem = [ ...corpoEl.querySelectorAll ( '.cartao' ) ].map ( c => c.dataset.id );
-        const mapaCartoes = { };
-        quadro.colunas.forEach ( c => c.cartoes.forEach ( ct => mapaCartoes[ ct.id ] = ct ) );
         coluna.cartoes = idsNaOrdem.map ( id => mapaCartoes[ id ] ).filter ( Boolean );
-    } );
-
-    // remove cartões de colunas antigas quando movidos para outra coluna
-    const idsVisiveis = new Set ( [ ...document.querySelectorAll ( '.cartao' ) ].map ( c => c.dataset.id ) );
-    quadro.colunas.forEach ( coluna => {
-        coluna.cartoes = coluna.cartoes.filter ( c => idsVisiveis.has ( c.id ) );
-    } );
-}
-
-function atualizarEstatisticasColunas ( ) {
-    quadro.colunas.forEach ( coluna => {
-        const el = document.querySelector ( `.coluna[data-id="${ coluna.id }"]` );
-        if ( ! el ) return;
-        const total = coluna.cartoes.reduce ( ( soma, c ) => soma + ( Number ( c.valor ) || 0 ), 0 );
-        const stats = el.querySelector ( '.coluna-stats' );
-        stats.innerHTML = `<span>${ coluna.cartoes.length } cartão${ coluna.cartoes.length == 1 ? '' : 'ões' }</span><span class="valor-total">${ formatarValor ( total ) }</span>`;
     } );
 }
 
@@ -1039,11 +946,8 @@ function ativarArrastarColunas ( ) {
         if ( ! arrastando ) return;
         e.preventDefault ( );
         const depois = elementoDepoisDoMouseX ( board, e.clientX, '.coluna:not(.arrastando-col)' );
-        if ( depois == null ) {
-            board.insertBefore ( arrastando, document.querySelector ( '.coluna-nova' ) );
-        } else {
-            board.insertBefore ( arrastando, depois );
-        }
+        if ( depois == null ) board.insertBefore ( arrastando, document.querySelector ( '.coluna-nova' ) );
+        else board.insertBefore ( arrastando, depois );
     } );
 }
 
@@ -1052,9 +956,7 @@ function elementoDepoisDoMouseX ( container, posicao, seletor ) {
     return itens.reduce ( ( maisProximo, item ) => {
         const box = item.getBoundingClientRect ( );
         const offset = posicao - box.left - box.width / 2;
-        if ( offset < 0 && offset > maisProximo.offset ) {
-            return { offset, elemento: item };
-        }
+        if ( offset < 0 && offset > maisProximo.offset ) return { offset, elemento: item };
         return maisProximo;
     }, { offset: Number.NEGATIVE_INFINITY, elemento: null } ).elemento;
 }
@@ -1066,7 +968,30 @@ function sincronizarOrdemColunas ( ) {
     quadro.colunas = idsNaOrdem.map ( id => mapaColunas[ id ] ).filter ( Boolean );
 }
 
-/* ---------- modal de cartão ---------- */
+/* ---------- formulario dinamico do cartao ---------- */
+
+function renderizarCampoFormulario ( campo, valorAtual ) {
+    const idInput = 'campo_dinamico_' + campo.chave;
+
+    if ( campo.tipo == 'textarea' ) {
+        return `<div class="campo"><label>${ escapar ( campo.rotulo ) }</label><textarea id="${ idInput }" data-chave="${ campo.chave }" rows="3">${ escapar ( valorAtual || '' ) }</textarea></div>`;
+    }
+
+    if ( campo.tipo == 'numero' ) {
+        return `<div class="campo"><label>${ escapar ( campo.rotulo ) }</label><input type="number" id="${ idInput }" data-chave="${ campo.chave }" value="${ valorAtual != null ? valorAtual : '' }"></div>`;
+    }
+
+    if ( campo.tipo == 'data' ) {
+        return `<div class="campo"><label>${ escapar ( campo.rotulo ) }</label><input type="date" id="${ idInput }" data-chave="${ campo.chave }" value="${ valorAtual || '' }"></div>`;
+    }
+
+    if ( campo.tipo == 'selecao' ) {
+        const opcoesHtml = ( campo.opcoes || [ ] ).map ( o => `<option value="${ escapar ( o.rotulo ) }" ${ o.rotulo == valorAtual ? 'selected' : '' }>${ escapar ( o.rotulo ) }</option>` ).join ( '' );
+        return `<div class="campo"><label>${ escapar ( campo.rotulo ) }</label><select id="${ idInput }" data-chave="${ campo.chave }"><option value="">Selecione...</option>${ opcoesHtml }</select></div>`;
+    }
+
+    return `<div class="campo"><label>${ escapar ( campo.rotulo ) }</label><input type="text" id="${ idInput }" data-chave="${ campo.chave }" value="${ escapar ( valorAtual || '' ) }"></div>`;
+}
 
 function abrirModalCartao ( colunaId, cartaoId ) {
     cartaoEditando = { colunaId, cartaoId };
@@ -1074,18 +999,29 @@ function abrirModalCartao ( colunaId, cartaoId ) {
     const cartao = cartaoId ? coluna.cartoes.find ( c => c.id == cartaoId ) : null;
 
     document.getElementById ( 'cartaoModalTitulo' ).innerText = cartao ? 'Editar cartão' : 'Novo cartão';
-    document.getElementById ( 'campoId' ).value = cartao ? cartao.identificacao || '' : '';
-    document.getElementById ( 'campoPaciente' ).value = cartao ? cartao.paciente || '' : '';
-    document.getElementById ( 'campoTelefone' ).value = cartao ? cartao.telefone || '' : '';
-    document.getElementById ( 'campoConvenio' ).value = cartao ? cartao.convenio || '' : '';
-    document.getElementById ( 'campoValor' ).value = cartao ? cartao.valor || '' : '';
-    document.getElementById ( 'campoResponsavel' ).value = cartao ? cartao.responsavel || '' : '';
-    document.getElementById ( 'campoTags' ).value = cartao ? ( cartao.tags || [ ] ).join ( ', ' ) : '';
+
+    const area = document.getElementById ( 'areaCamposCartao' );
+    area.innerHTML = quadro.camposConfig.map ( campo => renderizarCampoFormulario ( campo, cartao ? cartao.dados[ campo.chave ] : '' ) ).join ( '' );
+
+    const areaHist = document.getElementById ( 'areaHistoricoCartao' );
+    if ( cartao ) {
+        const itens = ( cartao.historico || [ ] ).slice ( 0, 8 ).map ( h => `
+            <div class="historico-item"><span class="ponto"></span><span><b>${ dataHoraCompleta ( h.data ) }</b> — ${ escapar ( h.evento ) }</span></div>
+        ` ).join ( '' );
+
+        areaHist.innerHTML = `
+            <div class="historico-box">
+                <div class="historico-meta">Criado em <b>${ dataHoraCompleta ( cartao.criadoEm ) }</b> · atualizado ${ tempoRelativo ( cartao.atualizadoEm ) }</div>
+                <div class="historico-lista">${ itens || '<div class="historico-item">Sem histórico ainda.</div>' }</div>
+            </div>
+        `;
+    } else {
+        areaHist.innerHTML = '';
+    }
 
     document.getElementById ( 'btnExcluirCartao' ).style.display = cartao ? 'inline-flex' : 'none';
 
     abrirOverlay ( 'overlayCartao' );
-    setTimeout ( ( ) => document.getElementById ( 'campoId' ).focus ( ), 50 );
 }
 
 function salvarCartao ( ) {
@@ -1093,22 +1029,22 @@ function salvarCartao ( ) {
     const coluna = quadro.colunas.find ( c => c.id == colunaId );
     if ( ! coluna ) return;
 
-    const dados = {
-        identificacao: document.getElementById ( 'campoId' ).value.trim ( ) || 'Sem identificação',
-        paciente: document.getElementById ( 'campoPaciente' ).value.trim ( ),
-        telefone: document.getElementById ( 'campoTelefone' ).value.trim ( ),
-        convenio: document.getElementById ( 'campoConvenio' ).value.trim ( ),
-        valor: parseFloat ( document.getElementById ( 'campoValor' ).value.replace ( ',', '.' ) ) || 0,
-        responsavel: document.getElementById ( 'campoResponsavel' ).value.trim ( ),
-        tags: document.getElementById ( 'campoTags' ).value.split ( ',' ).map ( t => t.trim ( ) ).filter ( Boolean )
-    };
+    const dados = { };
+    quadro.camposConfig.forEach ( campo => {
+        const input = document.querySelector ( `#areaCamposCartao [data-chave="${ campo.chave }"]` );
+        if ( ! input ) return;
+        if ( campo.tipo == 'numero' ) dados[ campo.chave ] = input.value === '' ? null : Number ( input.value );
+        else dados[ campo.chave ] = input.value.trim ( );
+    } );
 
     if ( cartaoId ) {
         const cartao = coluna.cartoes.find ( c => c.id == cartaoId );
-        Object.assign ( cartao, dados );
+        cartao.dados = dados;
+        registrarHistorico ( cartao, 'Cartão atualizado' );
         toast ( 'Cartão atualizado', 'sucesso' );
     } else {
-        coluna.cartoes.push ( { id: gerarId ( ), ...dados } );
+        const agora = new Date ( ).toISOString ( );
+        coluna.cartoes.push ( { id: gerarId ( ), dados, criadoEm: agora, atualizadoEm: agora, historico: [ { data: agora, evento: 'Cartão criado' } ] } );
         toast ( 'Cartão criado', 'sucesso' );
     }
 
@@ -1118,33 +1054,27 @@ function salvarCartao ( ) {
 }
 
 function confirmarExcluirCartao ( ) {
-    abrirConfirmacao (
-        'Excluir cartão?',
-        'Esse cartão será removido permanentemente do quadro.',
-        ( ) => {
-            const { colunaId, cartaoId } = cartaoEditando;
-            const coluna = quadro.colunas.find ( c => c.id == colunaId );
-            coluna.cartoes = coluna.cartoes.filter ( c => c.id != cartaoId );
-            persistir ( );
-            fecharOverlay ( 'overlayCartao' );
-            renderBoard ( );
-            toast ( 'Cartão excluído', 'perigo' );
-        }
-    );
+    abrirConfirmacao ( 'Excluir cartão?', 'Esse cartão será removido permanentemente do quadro.', ( ) => {
+        const { colunaId, cartaoId } = cartaoEditando;
+        const coluna = quadro.colunas.find ( c => c.id == colunaId );
+        coluna.cartoes = coluna.cartoes.filter ( c => c.id != cartaoId );
+        persistir ( );
+        fecharOverlay ( 'overlayCartao' );
+        renderBoard ( );
+        toast ( 'Cartão excluído', 'perigo' );
+    } );
 }
 
 /* ---------- modal de coluna ---------- */
 
-function montarPaletaCores ( ) {
+function montarPaletaCoresColuna ( ) {
     const paleta = document.getElementById ( 'paletaCores' );
     paleta.innerHTML = '';
-    CORES.forEach ( c => {
+    CORES_COLUNA.forEach ( cor => {
         const btn = document.createElement ( 'button' );
         btn.type = 'button';
-        btn.className = 'cor-op' + ( c.valor == corSelecionada ? ' selecionada' : '' );
-        btn.style.background = c.valor;
-        btn.title = c.nome;
-        btn.onclick = ( ) => { corSelecionada = c.valor; montarPaletaCores ( ); };
+        btn.style.cssText = `width:30px;height:30px;border-radius:50%;background:${ cor };border:2px solid ${ cor == corSelecionadaColuna ? 'var(--ink)' : 'transparent' };cursor:pointer;`;
+        btn.onclick = ( ) => { corSelecionadaColuna = cor; montarPaletaCoresColuna ( ); };
         paleta.appendChild ( btn );
     } );
 }
@@ -1155,10 +1085,10 @@ function abrirModalColuna ( colunaId ) {
 
     document.getElementById ( 'colunaModalTitulo' ).innerText = coluna ? 'Editar coluna' : 'Nova coluna';
     document.getElementById ( 'campoColunaNome' ).value = coluna ? coluna.titulo : '';
-    corSelecionada = coluna ? coluna.cor : CORES[ quadro.colunas.length % CORES.length ].valor;
+    corSelecionadaColuna = coluna ? coluna.cor : CORES_COLUNA[ quadro.colunas.length % CORES_COLUNA.length ];
     document.getElementById ( 'btnExcluirColuna' ).style.display = coluna ? 'inline-flex' : 'none';
 
-    montarPaletaCores ( );
+    montarPaletaCoresColuna ( );
     abrirOverlay ( 'overlayColuna' );
     setTimeout ( ( ) => document.getElementById ( 'campoColunaNome' ).focus ( ), 50 );
 }
@@ -1169,10 +1099,10 @@ function salvarColuna ( ) {
     if ( colunaEditandoId ) {
         const coluna = quadro.colunas.find ( c => c.id == colunaEditandoId );
         coluna.titulo = nome;
-        coluna.cor = corSelecionada;
+        coluna.cor = corSelecionadaColuna;
         toast ( 'Coluna atualizada', 'sucesso' );
     } else {
-        quadro.colunas.push ( { id: gerarId ( ), titulo: nome, cor: corSelecionada, cartoes: [ ] } );
+        quadro.colunas.push ( { id: gerarId ( ), titulo: nome, cor: corSelecionadaColuna, cartoes: [ ] } );
         toast ( 'Coluna criada', 'sucesso' );
     }
 
@@ -1182,17 +1112,141 @@ function salvarColuna ( ) {
 }
 
 function confirmarExcluirColuna ( ) {
-    abrirConfirmacao (
-        'Excluir coluna?',
-        'Todos os cartões dessa coluna serão excluídos junto.',
-        ( ) => {
-            quadro.colunas = quadro.colunas.filter ( c => c.id != colunaEditandoId );
-            persistir ( );
-            fecharOverlay ( 'overlayColuna' );
-            renderBoard ( );
-            toast ( 'Coluna excluída', 'perigo' );
+    abrirConfirmacao ( 'Excluir coluna?', 'Todos os cartões dessa coluna serão excluídos junto.', ( ) => {
+        quadro.colunas = quadro.colunas.filter ( c => c.id != colunaEditandoId );
+        persistir ( );
+        fecharOverlay ( 'overlayColuna' );
+        renderBoard ( );
+        toast ( 'Coluna excluída', 'perigo' );
+    } );
+}
+
+/* ---------- configuracao de campos (formulario dinamico) ---------- */
+
+function abrirConfigCampos ( ) {
+    document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' );
+    campoConfigTemp = JSON.parse ( JSON.stringify ( quadro.camposConfig ) );
+    renderConfigCampos ( );
+    abrirOverlay ( 'overlayConfigCampos' );
+}
+
+function renderConfigCampos ( ) {
+    const lista = document.getElementById ( 'listaCamposConfig' );
+    lista.innerHTML = campoConfigTemp.map ( ( campo, idx ) => {
+        let extras = '';
+
+        if ( campo.tipo == 'numero' ) {
+            extras = `
+                <label class="cfg-check">
+                    <input type="checkbox" data-acao="usarBarra" data-idx="${ idx }" ${ campo.usarComoBarra ? 'checked' : '' }>
+                    Mostrar como barra de progresso (0–100)
+                </label>
+            `;
         }
-    );
+
+        if ( campo.tipo == 'selecao' ) {
+            const opcoes = campo.opcoes || [ ];
+            extras = `
+                <label class="cfg-check">
+                    <input type="checkbox" data-acao="usarCor" data-idx="${ idx }" ${ campo.usarComoCorDoCartao ? 'checked' : '' }>
+                    Usar essa cor para destacar o cartão inteiro
+                </label>
+                <div class="cfg-opcoes-lista">
+                    ${ opcoes.map ( ( op, oi ) => `
+                        <div class="cfg-opcao">
+                            <input type="color" data-acao="opcaoCor" data-idx="${ idx }" data-oidx="${ oi }" value="${ op.cor }">
+                            <input type="text" data-acao="opcaoRotulo" data-idx="${ idx }" data-oidx="${ oi }" value="${ escapar ( op.rotulo ) }" placeholder="Nome da opção">
+                            <button data-acao="opcaoRemover" data-idx="${ idx }" data-oidx="${ oi }" title="Remover opção">✕</button>
+                        </div>
+                    ` ).join ( '' ) }
+                </div>
+                <button class="btn-mini" data-acao="opcaoAdicionar" data-idx="${ idx }">+ opção</button>
+            `;
+        }
+
+        return `
+            <div class="config-linha" data-idx="${ idx }">
+                <div class="cfg-topo">
+                    <input class="cfg-rotulo" data-acao="rotulo" data-idx="${ idx }" value="${ escapar ( campo.rotulo ) }" placeholder="Nome do campo">
+                    <select class="cfg-tipo" data-acao="tipo" data-idx="${ idx }">
+                        <option value="texto" ${ campo.tipo == 'texto' ? 'selected' : '' }>Texto curto</option>
+                        <option value="textarea" ${ campo.tipo == 'textarea' ? 'selected' : '' }>Texto longo</option>
+                        <option value="numero" ${ campo.tipo == 'numero' ? 'selected' : '' }>Número</option>
+                        <option value="data" ${ campo.tipo == 'data' ? 'selected' : '' }>Data</option>
+                        <option value="selecao" ${ campo.tipo == 'selecao' ? 'selected' : '' }>Lista de opções</option>
+                    </select>
+                    <button class="cfg-remover" data-acao="removerCampo" data-idx="${ idx }" title="Remover campo">✕</button>
+                </div>
+                ${ extras }
+            </div>
+        `;
+    } ).join ( '' );
+}
+
+document.getElementById ( 'listaCamposConfig' ).addEventListener ( 'input', e => {
+    const alvo = e.target;
+    const acao = alvo.dataset.acao;
+    const idx = alvo.dataset.idx;
+    if ( acao == null ) return;
+
+    if ( acao == 'rotulo' ) campoConfigTemp[ idx ].rotulo = alvo.value;
+    if ( acao == 'opcaoRotulo' ) campoConfigTemp[ idx ].opcoes[ alvo.dataset.oidx ].rotulo = alvo.value;
+    if ( acao == 'opcaoCor' ) campoConfigTemp[ idx ].opcoes[ alvo.dataset.oidx ].cor = alvo.value;
+} );
+
+document.getElementById ( 'listaCamposConfig' ).addEventListener ( 'change', e => {
+    const alvo = e.target;
+    const acao = alvo.dataset.acao;
+    const idx = alvo.dataset.idx;
+    if ( acao == null ) return;
+
+    if ( acao == 'tipo' ) {
+        campoConfigTemp[ idx ].tipo = alvo.value;
+        if ( alvo.value == 'selecao' && ! campoConfigTemp[ idx ].opcoes ) {
+            campoConfigTemp[ idx ].opcoes = [ { rotulo: 'Opção 1', cor: CORES_OPCAO[0] } ];
+        }
+        renderConfigCampos ( );
+    }
+
+    if ( acao == 'usarBarra' ) campoConfigTemp[ idx ].usarComoBarra = alvo.checked;
+    if ( acao == 'usarCor' ) campoConfigTemp[ idx ].usarComoCorDoCartao = alvo.checked;
+} );
+
+document.getElementById ( 'listaCamposConfig' ).addEventListener ( 'click', e => {
+    const alvo = e.target.closest ( '[data-acao]' );
+    if ( ! alvo ) return;
+    const acao = alvo.dataset.acao;
+    const idx = alvo.dataset.idx;
+
+    if ( acao == 'removerCampo' ) {
+        campoConfigTemp.splice ( idx, 1 );
+        renderConfigCampos ( );
+    }
+
+    if ( acao == 'opcaoAdicionar' ) {
+        const opcoes = campoConfigTemp[ idx ].opcoes || ( campoConfigTemp[ idx ].opcoes = [ ] );
+        const corLivre = CORES_OPCAO[ opcoes.length % CORES_OPCAO.length ];
+        opcoes.push ( { rotulo: 'Nova opção', cor: corLivre } );
+        renderConfigCampos ( );
+    }
+
+    if ( acao == 'opcaoRemover' ) {
+        campoConfigTemp[ idx ].opcoes.splice ( alvo.dataset.oidx, 1 );
+        renderConfigCampos ( );
+    }
+} );
+
+function adicionarCampoConfig ( ) {
+    campoConfigTemp.push ( { id: gerarId ( ), chave: gerarId ( ), rotulo: 'Novo campo', tipo: 'texto' } );
+    renderConfigCampos ( );
+}
+
+function salvarConfigCampos ( ) {
+    quadro.camposConfig = campoConfigTemp;
+    persistir ( );
+    fecharOverlay ( 'overlayConfigCampos' );
+    renderBoard ( );
+    toast ( 'Configuração de campos salva', 'sucesso' );
 }
 
 /* ---------- confirmação genérica ---------- */
@@ -1211,17 +1265,13 @@ document.getElementById ( 'btnConfirmarAcao' ).addEventListener ( 'click', ( ) =
 
 function confirmarReiniciar ( ) {
     document.getElementById ( 'menuDrop' ).classList.remove ( 'aberto' );
-    abrirConfirmacao (
-        'Reiniciar quadro?',
-        'Isso vai apagar tudo e voltar para os dados de exemplo.',
-        ( ) => {
-            quadro = quadroPadrao ( );
-            persistir ( );
-            document.getElementById ( 'quadroTitulo' ).value = quadro.titulo;
-            renderBoard ( );
-            toast ( 'Quadro reiniciado', 'perigo' );
-        }
-    );
+    abrirConfirmacao ( 'Reiniciar quadro?', 'Isso vai apagar tudo e voltar para os dados de exemplo.', ( ) => {
+        quadro = quadroPadrao ( );
+        persistir ( );
+        document.getElementById ( 'quadroTitulo' ).value = quadro.titulo;
+        renderBoard ( );
+        toast ( 'Quadro reiniciado', 'perigo' );
+    } );
 }
 
 /* ---------- busca / filtro ---------- */
@@ -1243,7 +1293,7 @@ function exportarJSON ( ) {
     const url = URL.createObjectURL ( blob );
     const a = document.createElement ( 'a' );
     a.href = url;
-    a.download = 'quadro-orcamentos.json';
+    a.download = 'quadro-tarefas.json';
     a.click ( );
     URL.revokeObjectURL ( url );
     toast ( 'Dados exportados', 'sucesso' );
@@ -1257,10 +1307,10 @@ function importarJSON ( evento ) {
     leitor.onload = ( ) => {
         try {
             const dados = JSON.parse ( leitor.result );
-            if ( ! dados.colunas ) throw new Error ( 'formato inválido' );
+            if ( ! dados.colunas || ! dados.camposConfig ) throw new Error ( 'formato inválido' );
             quadro = dados;
             persistir ( );
-            document.getElementById ( 'quadroTitulo' ).value = quadro.titulo || 'Quadro de Orçamentos';
+            document.getElementById ( 'quadroTitulo' ).value = quadro.titulo || 'Quadro de Tarefas';
             renderBoard ( );
             toast ( 'Dados importados com sucesso', 'sucesso' );
         } catch ( e ) {
